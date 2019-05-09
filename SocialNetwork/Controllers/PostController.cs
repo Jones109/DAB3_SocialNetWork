@@ -44,7 +44,9 @@ namespace SocialNetWork.Controllers
         {
             try
             {
+                
                 // TODO: Add insert logic here
+                _postService.Create()
 
                 return RedirectToAction(nameof(Index));
             }

@@ -14,7 +14,6 @@ using Microsoft.EntityFrameworkCore;
 using SocialNetwork.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SocialNetWork.Models;
 
 namespace SocialNetwork
 {

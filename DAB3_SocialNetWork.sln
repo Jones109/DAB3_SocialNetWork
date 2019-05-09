@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.489
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAB3_SocialNetWork", "DAB3_SocialNetWork\DAB3_SocialNetWork.csproj", "{2F82206D-4783-4B4B-B309-A18862BB0F0D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetwork", "SocialNetwork\SocialNetwork.csproj", "{F23AD558-89EE-42F1-BB76-F1F90C0A7D5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2F82206D-4783-4B4B-B309-A18862BB0F0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2F82206D-4783-4B4B-B309-A18862BB0F0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2F82206D-4783-4B4B-B309-A18862BB0F0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2F82206D-4783-4B4B-B309-A18862BB0F0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F23AD558-89EE-42F1-BB76-F1F90C0A7D5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F23AD558-89EE-42F1-BB76-F1F90C0A7D5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F23AD558-89EE-42F1-BB76-F1F90C0A7D5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F23AD558-89EE-42F1-BB76-F1F90C0A7D5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DAB3_SocialNetWork.Models;
+using SocialNetWork.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DAB3_SocialNetWork.Controllers
+namespace SocialNetWork.Controllers
 {
 
    

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SocialNetwork.Models;
 
 namespace SocialNetwork.Data
 {
@@ -12,5 +13,6 @@ namespace SocialNetwork.Data
             : base(options)
         {
         }
+        public DbSet<SocialNetwork.Models.Wall> Wall { get; set; }
     }
 }

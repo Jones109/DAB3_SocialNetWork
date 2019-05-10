@@ -48,6 +48,8 @@ namespace SocialNetwork
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddScoped<UserService>();
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));

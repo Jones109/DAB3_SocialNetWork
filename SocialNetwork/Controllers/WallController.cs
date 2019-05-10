@@ -2,50 +2,39 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SocialNetWork.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace SocialNetWork.Controllers
+namespace SocialNetwork.Controllers
 {
-
-   
-    public class PostController : Controller
+    public class WallController : Controller
     {
-        private PostService _postService;
-
-        public PostController(PostService postService)
-        {
-            _postService = postService;
-        }
-
-        // GET: Post
+        // GET: Wall
         public ActionResult Index()
         {
-            return View(_postService.Get());
+            return View();
         }
 
-        // GET: Post/Details/5
+        // GET: Wall/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: Post/Create
+        // GET: Wall/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Post/Create
+        // POST: Wall/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Post post)
+        public ActionResult Create(IFormCollection collection)
         {
             try
             {
-
-                _postService.Create(post);
+                // TODO: Add insert logic here
 
                 return RedirectToAction(nameof(Index));
             }
@@ -55,32 +44,20 @@ namespace SocialNetWork.Controllers
             }
         }
 
-        // GET: Post/Edit/5
+        // GET: Wall/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: Post/Edit/5
+        // POST: Wall/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(string id, Post post)
+        public ActionResult Edit(int id, IFormCollection collection)
         {
             try
             {
-
-                Post editedPost = _postService.Get(id);
-                if (post.ImgUri != null)
-                {
-                    editedPost.ImgUri = post.ImgUri;
-                }
-
-                if (post.Text != null)
-                {
-                    editedPost.Text = post.Text;
-                }
-
-                _postService.Update(id, editedPost);
+                // TODO: Add update logic here
 
                 return RedirectToAction(nameof(Index));
             }
@@ -90,20 +67,20 @@ namespace SocialNetWork.Controllers
             }
         }
 
-        // GET: Post/Delete/5
+        // GET: Wall/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Post/Delete/5
+        // POST: Wall/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Post post)
+        public ActionResult Delete(int id, IFormCollection collection)
         {
             try
             {
-                _postService.Remove(post);
+                // TODO: Add delete logic here
 
                 return RedirectToAction(nameof(Index));
             }

@@ -1,0 +1,54 @@
+﻿@model SocialNetwork.Models.Wall
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Wall</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ownerID)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ownerID)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.postIDs)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.postIDs)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.followers)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.followers)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.owner)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.owner)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.blackList)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.blackList)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.type)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.type)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

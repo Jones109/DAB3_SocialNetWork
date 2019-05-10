@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using SocialNetwork.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SocialNetwork.Services;
 
 namespace SocialNetwork
 {
@@ -35,6 +36,8 @@ namespace SocialNetwork
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+            services.AddScoped<UserService>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(

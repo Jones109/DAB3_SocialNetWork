@@ -1,5 +1,6 @@
 ﻿@model SocialNetwork.Models.Wall
-
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
 @{
     ViewData["Title"] = "Create";
 }
@@ -14,7 +15,15 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="ownerID" class="control-label"></label>
-                <input asp-for="ownerID" class="form-control" />
+                @if (string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Session.GetString("UserId")))
+                {
+                    <input asp-for="ownerID" class="form-control" />
+                }
+                else
+                {
+
+                    <input asp-for="ownerID" value='@HttpContextAccessor.HttpContext.Session.GetString("UserId")' class="form-control" />
+                }
                 <span asp-validation-for="ownerID" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -22,24 +31,19 @@
                 <input asp-for="postIDs" class="form-control" />
                 <span asp-validation-for="postIDs" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="followers" class="control-label"></label>
-                <input asp-for="followers" class="form-control" />
-                <span asp-validation-for="followers" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="owner" class="control-label"></label>
                 <input asp-for="owner" class="form-control" />
                 <span asp-validation-for="owner" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="blackList" class="control-label"></label>
-                <input asp-for="blackList" class="form-control" />
-                <span asp-validation-for="blackList" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="type" class="control-label"></label>
-                <input asp-for="type" class="form-control" />
+                <select asp-for="type" class="form-control">
+                    <option value="user">User</option>
+                    <option value="circle">Circle</option>
+                </select>
                 <span asp-validation-for="type" class="text-danger"></span>
             </div>
             <div class="form-group">

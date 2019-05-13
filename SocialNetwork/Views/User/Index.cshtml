@@ -16,6 +16,9 @@
             <th>
                 Feed
             </th>
+            <th>
+                Profile
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -30,8 +33,7 @@
                         <a asp-action="Feed" asp-route-id="@user.Id">Feed</a>
                     </td>
                     <td>
-                        <a asp-action="Details" asp-route-id="@user.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@user.Id">Delete</a>
+                        <a asp-action="Details" asp-route-id="@user.Id">Details</a>
                     </td>
                 </tr>
             }

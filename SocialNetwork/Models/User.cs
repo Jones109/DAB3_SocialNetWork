@@ -16,6 +16,9 @@ namespace SocialNetwork.Models
         [BsonElement("Following")]
         public List<string> FollowingId { get; set; }
 
+        [BsonElement("Followers")]
+        public List<string> FollowerId { get; set; }
+
         [BsonElement("Circles")]
         public List<string> Circles{ get; set; }
 

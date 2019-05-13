@@ -10,6 +10,8 @@ namespace SocialNetwork.Services
     public class UserService
     {
         private readonly IMongoCollection<User> _users;
+        private readonly IMongoCollection<Post> _users;
+        private readonly IMongoCollection<Wall> _users;
 
         public UserService(IConfiguration config)
         {
@@ -28,6 +30,48 @@ namespace SocialNetwork.Services
             return _users.Find<User>(user => user.Id == id).FirstOrDefault();
         }
 
+        public List<User> GetFollowing(string id)
+        {
+            var model = _users.Find<User>(user => user.Id == id).FirstOrDefault();
+
+            List<User> followers = new List<User>();
+
+            if (model.FollowingId != null)
+            {
+                foreach (var fo in model.FollowingId)
+                {
+                    followers.Add(_users.Find<User>(user => user.Id == fo).FirstOrDefault());
+                }
+            }
+
+            return followers;
+        }
+
+        public List<Post> GetFeedPosts(string id)
+        {
+            List<Post> posts = new List<Post>();
+
+            posts = 
+
+        }
+
+        public List<User> GetFollowers(string id)
+        {
+            var model = _users.Find<User>(user => user.Id == id).FirstOrDefault();
+
+            List<User> followers = new List<User>();
+
+            if (model.FollowerId != null)
+            {
+                foreach (var fo in model.FollowerId)
+                {
+                    followers.Add(_users.Find<User>(user => user.Id == fo).FirstOrDefault());
+                }
+            }
+
+            return followers;
+        }
+        
         public User Create(User user)
         {
             _users.InsertOne(user);

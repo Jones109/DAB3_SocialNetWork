@@ -5,20 +5,24 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SocialNetwork.Models;
 using SocialNetwork.Services;
+using SocialNetwork.ViewModels;
 using SocialNetWork.Models;
 
 namespace SocialNetwork.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("[controller]/[action]")]
     [ApiController]
     public class UserController : Controller
     {
         private readonly UserService _userService;
         private readonly PostService _postService;
+        private readonly UserViewModel _vm;
         
-        public UserController(UserService userService)
+        public UserController(UserService userService, PostService postService)
         {
             _userService = userService;
+            _postService = postService;
+            _vm = new UserViewModel();
         }
 
         public IActionResult Index()
@@ -35,9 +39,13 @@ namespace SocialNetwork.Controllers
             return View(model);
         }
 
-        public IActionResult Details()
+        public IActionResult Details(string id)
         {
-            return View();
+            _vm.User = _userService.Get(id);
+            _vm.Followers = _userService.GetFollowers(id);
+            _vm.Following = _userService.GetFollowing(id);
+
+            return View(_vm);
         }
 
         [HttpGet]

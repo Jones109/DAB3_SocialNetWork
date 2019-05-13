@@ -1,10 +1,38 @@
-﻿@model object
+﻿@using System.Security.Cryptography
+@model SocialNetwork.ViewModels.UserViewModel
 
-@{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+
+@if (Model != null)
+{
+    <h2>@Model.User.Name Profile</h2>
+    <h3>Followers</h3>
+    if (Model.Followers.Count != 0)
+    {
+        foreach (var follower in Model.Followers)
+        {
+            <a asp-action="Details" asp-route-id="@follower.Id">@follower.Name</a>
+        }
+    }
+    else
+    {
+        <p>No Followers</p>
+    }
+    <h3>Following</h3>
+    if (Model.Following.Count != 0)
+    {
+        foreach (var following in Model.Following)
+        {
+            <a asp-action="Details" asp-route-id="@following.Id">@following.Name</a>
+        }
+    }
+    else
+    {
+        <p>Following none</p>
+    }
+
 }
-
-<h2>My profile</h2>
-
+else
+{
+    <h2>Model not found</h2>
+}
 

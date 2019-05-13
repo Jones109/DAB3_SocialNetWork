@@ -16,13 +16,10 @@
             <th>
                 Feed
             </th>
-            <th>
-                Profile
-            </th>
         </tr>
     </thead>
     <tbody>
-        @if (Model != null && Model.Count() > 0)
+        @if (Model != null && Model.Count > 0)
         {
             foreach(var user in Model){
                 <tr>
@@ -33,7 +30,8 @@
                         <a asp-action="Feed" asp-route-id="@user.Id">Feed</a>
                     </td>
                     <td>
-                        <a asp-action="Details" asp-route-id="@user.Id">Details</a>
+                        <a asp-action="Details" asp-route-id="@user.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@user.Id">Delete</a>
                     </td>
                 </tr>
             }
@@ -41,8 +39,10 @@
         else
         {
             <tr>
-                <td><p>No walls</p></td>
+                <td><p>No users</p></td>
             </tr>
         }
     </tbody>
 </table>
+
+

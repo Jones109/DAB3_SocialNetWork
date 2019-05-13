@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SocialNetWork.Models;
 using Microsoft.Extensions.Configuration;
@@ -6,6 +7,7 @@ using MongoDB.Driver;
 using SocialNetwork.Models;
 using System.Security.Cryptography;
 using System.Text;
+using SocialNetwork.ViewModels;
 
 namespace SocialNetwork.Services
 {
@@ -35,6 +37,73 @@ namespace SocialNetwork.Services
             return _users.Find<User>(user => user.Id == id).FirstOrDefault();
         }
 
+        public bool Follow(string idToFollow, string followerId)
+        {
+            var following = _users.Find<User>(u => u.Id == followerId).FirstOrDefault();
+
+            var follower = _users.Find<User>(u => u.Id == idToFollow).FirstOrDefault();
+
+            if (follower != null && following != null)
+            {
+                if (follower.FollowingId == null)
+                    follower.FollowingId = new List<string>();
+
+                follower.FollowingId.Add(idToFollow);
+                _users.ReplaceOne(u => u.Id == followerId, follower);
+            
+                if (following.FollowerId == null)
+                    following.FollowerId= new List<string>();
+
+                following.FollowerId.Add(followerId);
+                _users.ReplaceOne(u => u.Id == idToFollow, following);
+                return true;
+            }
+
+            return false;
+        }
+
+        public List<Post> GetFeedPosts(string id)
+        {
+            List<Post> posts = new List<Post>();
+            List<Wall> followingWall = new List<Wall>();
+
+            var user = Get(id);
+
+            if (user.FollowingId != null && user.FollowingId.Count != 0)
+            {
+                foreach (var wall in user.FollowingId)
+                {
+                    followingWall.Add(_walls.Find<Wall>(w => w.ID == wall).FirstOrDefault());
+                }
+            }
+            else return posts;
+
+            foreach (var wall in followingWall)
+            {
+                if (wall != null)
+                    foreach (var post in wall.postIDs)
+                    {
+                        posts.Add(_posts.Find<Post>(p => p.Id == post.id).FirstOrDefault());
+                    }
+            }
+
+            return posts;
+        }
+
+        public UserViewModel ConstructViewModel(string id)
+        {
+            UserViewModel vm = new UserViewModel();
+
+            vm.User = Get(id);
+            vm.Followers = GetFollowers(id);
+            vm.Following = GetFollowing(id);
+            vm.FeedPosts = GetFeedPosts(id);
+            vm.Followable = GetFollowable(id);
+            vm.Users = Get();
+
+            return vm;
+        }
+
         public List<User> GetFollowing(string id)
         {
             var model = _users.Find<User>(user => user.Id == id).FirstOrDefault();
@@ -52,22 +121,6 @@ namespace SocialNetwork.Services
             return followers;
         }
 
-        public List<Post> GetFeedPosts(string id)
-        {
-            List<Post> posts = new List<Post>();
-            List<Wall> followingWall = new List<Wall>();
-
-            var user = Get(id);
-
-            if (user.FollowingId.Count != 0)
-            {
-                foreach (var wall in user.FollowingId)
-                {
-                    followingWall.Add(_walls.Find<Wall>(w => w.ID == wall).FirstOrDefault(););
-                }
-            }
-
-        //}
 
         public List<User> GetFollowers(string id)
         {
@@ -84,6 +137,46 @@ namespace SocialNetwork.Services
             }
 
             return followers;
+        }
+
+        public List<User> GetFollowable(string id)
+        {
+            var model = _users.Find<User>(user => user.Id == id).FirstOrDefault();
+
+            var allUsers = Get();
+
+            List<User> Followable = new List<User>();
+
+            try
+            {
+                if (allUsers != null) 
+                {
+                    if (model.FollowingId != null) //If model follows anyone
+                        foreach (var user in allUsers)
+                        {
+                            bool exist = false;
+                            foreach (var modelUser in model.FollowingId)
+                            {
+                                if (modelUser == user.Id || model.Id == user.Id)
+                                    exist = true;
+                            }
+                            if (!exist)
+                                Followable.Add(user);
+                        }
+                    else //If user doesn't follow anyone
+                        foreach (var user in allUsers)
+                        {
+                            if (model.Id != user.Id)
+                                Followable.Add(user);
+                        }
+                }
+            }
+            catch (NullReferenceException)
+            {
+                return Followable;
+            }
+
+            return Followable;
         }
         
         public User Create(User user)

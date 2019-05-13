@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using SocialNetwork.Models;
 using SocialNetwork.Services;
 using SocialNetwork.ViewModels;
@@ -42,11 +43,19 @@ namespace SocialNetwork.Controllers
 
         public IActionResult Details(string id)
         {
-            _vm.User = _userService.Get(id);
-            _vm.Followers = _userService.GetFollowers(id);
-            _vm.Following = _userService.GetFollowing(id);
+            return View(_userService.ConstructViewModel(id));
+        }
 
-            return View(_vm);
+        public IActionResult Follow(string id)
+        {
+            return View(_userService.ConstructViewModel(id));
+        }
+
+        public IActionResult FollowPost(string id, string idToFollow)
+        {
+            _userService.Follow(idToFollow, id);
+
+            return (RedirectToAction("Details", new {id = id}));
         }
 
         [HttpGet]

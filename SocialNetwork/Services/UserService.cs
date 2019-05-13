@@ -10,14 +10,16 @@ namespace SocialNetwork.Services
     public class UserService
     {
         private readonly IMongoCollection<User> _users;
-        private readonly IMongoCollection<Post> _users;
-        private readonly IMongoCollection<Wall> _users;
+        private readonly IMongoCollection<Post> _posts;
+        private readonly IMongoCollection<Wall> _walls;
 
         public UserService(IConfiguration config)
         {
             var client = new MongoClient(config.GetConnectionString("SocialNetworkDb"));
             var database = client.GetDatabase("SocialNetworkDb");
             _users = database.GetCollection<User>("Users");
+            _walls = database.GetCollection<Wall>("Walls");
+            _posts = database.GetCollection<Post>("Posts");
         }
 
         public List<User> Get()
@@ -50,8 +52,17 @@ namespace SocialNetwork.Services
         public List<Post> GetFeedPosts(string id)
         {
             List<Post> posts = new List<Post>();
+            List<Wall> followingWall = new List<Wall>();
 
-            posts = 
+            var user = Get(id);
+
+            if (user.FollowingId.Count != 0)
+            {
+                foreach (var wall in user.FollowingId)
+                {
+                    followingWall.Add(_walls.Find<Wall>(w => w.ID == wall).FirstOrDefault(););
+                }
+            }
 
         }
 

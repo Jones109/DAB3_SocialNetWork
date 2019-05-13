@@ -13,6 +13,12 @@ namespace SocialNetwork.Models
         [BsonElement("Name")]
         public string Name { get; set; }
 
+        [BsonElement("Password")]
+        public string Password { get; set; }
+
+        [BsonElement("UserName")]
+        public string UserName { get; set; }
+
         [BsonElement("Following")]
         public List<string> FollowingId { get; set; }
 

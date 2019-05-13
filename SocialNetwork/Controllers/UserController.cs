@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SocialNetwork.Models;
 using SocialNetwork.Services;
@@ -103,6 +104,51 @@ namespace SocialNetwork.Controllers
             _userService.Remove(user.Id);
 
             return NoContent();
+        }
+
+        public ActionResult Register(string lastUrl)
+        {
+            return View();
+        }
+
+        // POST: LoginTest/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Register(string lastUrl, User newUser)
+        {
+            try
+            {
+                _userService.Create(newUser);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        public ActionResult Login(string id)
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Login(string id, User userToLogin)
+        {
+            string idUser;
+            bool canLogIn = _userService.Login(userToLogin, out idUser);
+            if (canLogIn)
+            {
+                HttpContext.Session.Set("UserId", System.Text.Encoding.ASCII.GetBytes(idUser));
+                return RedirectToAction(id.Split('-')[1], id.Split('-')[0]);
+            }
+            else
+            {
+                return View();
+            }
         }
     }
 }

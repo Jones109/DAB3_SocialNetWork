@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using MongoDB;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -10,6 +11,7 @@ namespace SocialNetwork.Models
 {
     public class Wall
     {
+        
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string ID { get; set; }
@@ -20,16 +22,28 @@ namespace SocialNetwork.Models
         [BsonElement("postIDs")]
         public string postIDs { get; set; }
 
-        [BsonElement("followers")]
-        public string followers { get; set; } // User IDs
+        [BsonElement("Followers")]
+        public List<follower> Followers { get; set; } // User IDs
 
+        
         [BsonElement("owner")]
         public string owner { get; set; } // owner ID
 
-        [BsonElement("blackList")]
-        public string blackList { get; set; } // user IDs
+        [BsonElement("BlackList")]
+        public List<blacklistedUser> BlackList { get; set; } // user IDs
 
         [BsonElement("type")]
         public string type { get; set; } // type of owner
+    }
+
+    public class follower
+    {
+        public string followerID { get; set; }
+        public string followerName { get; set; }
+    }
+    public class blacklistedUser
+    {
+        public string userID { get; set; }
+        public string userName { get; set; }
     }
 }

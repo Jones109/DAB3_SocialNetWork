@@ -57,6 +57,7 @@ namespace SocialNetwork
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddScoped<CommentService>();
             services.AddScoped<PostService>();
             services.AddScoped<WallService>();
             services.AddScoped<LoginTestService>();

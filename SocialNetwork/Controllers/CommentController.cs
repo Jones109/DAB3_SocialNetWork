@@ -4,48 +4,75 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SocialNetwork.Models;
+using SocialNetWork.Models;
 
 namespace SocialNetwork.Controllers
 {
     public class CommentController : Controller
     {
+        private CommentService _commentService;
+        private PostService _postService;
+
+        public CommentController(CommentService commentService, PostService postService)
+        {
+            _commentService = commentService;
+            _postService = postService;
+        }
+
         // GET: Comment
         public ActionResult Index()
         {
-            return View();
+            return View(_commentService.Get());
         }
 
         // GET: Comment/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(string id)
         {
             return View();
         }
 
-        // GET: Comment/Create
-        public ActionResult Create()
+
+        // GET: Post/Create
+        public ActionResult Create(string PostId)
         {
-            return View();
+            Comment comment = new Comment();
+            comment.Post = PostId;
+
+            return View(comment);
         }
 
-        // POST: Comment/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(string PostId, Comment comment)
         {
             try
             {
-                // TODO: Add insert logic here
+                comment.LastEdited = DateTime.Now;
+                comment.Post = PostId;
+  
+
+                Comment newComment = _commentService.Create(comment);
+
+                Post newPost = _postService.Get(comment.Post);
+
+
+                newPost.Comments.Add(newComment);
+
+                _postService.Update(comment.Post, newPost);
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception e)
             {
                 return View();
             }
         }
 
+ 
+
         // GET: Comment/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             return View();
         }
@@ -53,11 +80,18 @@ namespace SocialNetwork.Controllers
         // POST: Comment/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(string id, Comment comment)
         {
             try
             {
-                // TODO: Add update logic here
+                Comment newComment = _commentService.Get(id);
+
+                newComment.Text = comment.Text;
+
+                newComment.IsEdited = true;
+                newComment.LastEdited = DateTime.Now;
+
+                _commentService.Update(id, newComment);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -68,7 +102,7 @@ namespace SocialNetwork.Controllers
         }
 
         // GET: Comment/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             return View();
         }
@@ -76,11 +110,11 @@ namespace SocialNetwork.Controllers
         // POST: Comment/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(string id, Comment comment)
         {
             try
             {
-                // TODO: Add delete logic here
+                _commentService.Remove(id);
 
                 return RedirectToAction(nameof(Index));
             }

@@ -1,8 +1,18 @@
-﻿@model object
+﻿@using System.Security.Cryptography
+@model User
 
 @{
     ViewBag.Title = "title";
     Layout = "_Layout";
 }
 
-<h2>title</h2>
+@if (Model != null)
+{
+    <h2>@Model.Name feed</h2>
+
+}
+else
+{
+    <h2>Model not found</h2>
+} 
+

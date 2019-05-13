@@ -16,6 +16,10 @@ namespace SocialNetwork.Models
         [BsonElement("OwnerName")]
         public string OwnerName { get; set; }
 
+
+        [BsonElement("Post")]
+        public string Post { get; set; }
+
         [BsonElement("Text")]
         public string Text { get; set; }
 

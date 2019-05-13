@@ -6,9 +6,41 @@
 
 <h1>Users</h1>
 
-@{
-    foreach (var user in Model)
-    {
-        <li> @user.Name </li>
-    }
-}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Feed
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count() > 0)
+        {
+            foreach(var user in Model){
+                <tr>
+                    <td>
+                        @user.Name
+                    </td>
+                    <td>
+                        <a asp-action="Feed" asp-route-id="@user.Id">Feed</a>
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@user.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@user.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td><p>No walls</p></td>
+            </tr>
+        }
+    </tbody>
+</table>

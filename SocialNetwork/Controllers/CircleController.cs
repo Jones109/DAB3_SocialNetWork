@@ -35,7 +35,7 @@ namespace SocialNetwork.Controllers
         public ActionResult Create(Circle circle)
         {
             try
-            {
+            {   // sæt returværdi på Create, så vi kan gå til den circle vi lige har created.
                 _circleService.Create(circle);
                 return RedirectToAction(nameof(Index));
             }

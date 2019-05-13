@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Http;
 using MongoDB;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using SocialNetwork.Models;
+using SocialNetWork.Models;
 
 namespace SocialNetwork.Models
 {
     public class Wall
     {
-        
+
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string ID { get; set; }
@@ -20,11 +22,11 @@ namespace SocialNetwork.Models
         public string ownerID { get; set; }
 
         [BsonElement("postIDs")]
-        public string postIDs { get; set; }
+        public List<PostId> postIDs { get; set; }
 
         [BsonElement("Followers")]
         public List<follower> Followers { get; set; } // User IDs
-        
+
         [BsonElement("owner")]
         public string owner { get; set; } // owner ID
 
@@ -44,5 +46,9 @@ namespace SocialNetwork.Models
     {
         public string userID { get; set; }
         public string userName { get; set; }
+    }
+    public class PostId
+    {
+        public string id { get; set; }
     }
 }

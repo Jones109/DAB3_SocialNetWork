@@ -19,7 +19,7 @@
                 @Html.DisplayNameFor(model => model.ownerID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.postIDs)
+                @Html.DisplayNameFor(model => model.posts)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Followers)
@@ -47,7 +47,7 @@
                 @Html.DisplayFor(modelItem => item.ownerID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.postIDs)
+                <a href="#">see posts</a>
             </td>
             <td>
                 <a href="/Wall/Followers/@item.ID"></a>

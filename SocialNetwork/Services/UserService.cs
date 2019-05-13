@@ -4,6 +4,8 @@ using SocialNetWork.Models;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using SocialNetwork.Models;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace SocialNetwork.Services
 {
@@ -12,6 +14,7 @@ namespace SocialNetwork.Services
         private readonly IMongoCollection<User> _users;
         private readonly IMongoCollection<Post> _posts;
         private readonly IMongoCollection<Wall> _walls;
+        private MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
 
         public UserService(IConfiguration config)
         {
@@ -64,7 +67,7 @@ namespace SocialNetwork.Services
                 }
             }
 
-        }
+        //}
 
         public List<User> GetFollowers(string id)
         {
@@ -85,12 +88,14 @@ namespace SocialNetwork.Services
         
         public User Create(User user)
         {
+            user.Password = HashPass(user.Password);
             _users.InsertOne(user);
             return user;
         }
 
         public void Update(string id, User userIn)
         {
+            userIn.Password = HashPass(userIn.Password);
             _users.ReplaceOne(user => user.Id == id, userIn);
         }
 
@@ -102,6 +107,32 @@ namespace SocialNetwork.Services
         public void Remove(string id)
         {
             _users.DeleteOne(user => user.Id == id);
+        }
+        private string HashPass(string pass)
+        {
+            var passBytes = System.Text.Encoding.ASCII.GetBytes(pass);
+            var HashBytes = md5.ComputeHash(passBytes);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < HashBytes.Length; i++)
+            {
+                sb.Append(HashBytes[i].ToString("X2"));
+            }
+            return sb.ToString();
+        }
+
+        public bool Login(User userToLogIn, out string id)
+        {
+            var pass = HashPass(userToLogIn.Password);
+            id = _users.Find(u => u.UserName == userToLogIn.UserName && u.Password == pass).FirstOrDefault().Id;
+
+            if (string.IsNullOrEmpty(id))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }

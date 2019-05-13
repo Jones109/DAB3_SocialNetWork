@@ -12,14 +12,13 @@ using SocialNetWork.Models;
 
 namespace SocialNetwork.Controllers
 {
-    [Route("[controller]/[action]")]
-    [ApiController]
+
     public class UserController : Controller
     {
         private readonly UserService _userService;
         private readonly PostService _postService;
         private readonly UserViewModel _vm;
-        
+
         public UserController(UserService userService, PostService postService)
         {
             _userService = userService;
@@ -27,7 +26,7 @@ namespace SocialNetwork.Controllers
             _vm = new UserViewModel();
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string id)
         {
             var users = _userService.Get();
 
@@ -95,24 +94,33 @@ namespace SocialNetwork.Controllers
                 return NotFound();
             }
 
-            _userService.Update(id, userIn);
+            _userService.Update(userIn);
 
             return NoContent();
         }
 
-        [HttpDelete("{id:length(24)}")]
-        public IActionResult Delete(string id)
+        // GET: LoginTest/Delete/5
+        public ActionResult Delete(string id)
         {
-            var user = _userService.Get(id);
 
-            if (user == null)
+            return View(_userService.Get(id));
+        }
+
+        // POST: LoginTest/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(string id, LoginTest userToDelete)
+        {
+            try
             {
-                return NotFound();
+                _userService.Remove(id);
+
+                return RedirectToAction(nameof(Index));
             }
-
-            _userService.Remove(user.Id);
-
-            return NoContent();
+            catch
+            {
+                return View();
+            }
         }
 
         public ActionResult Register(string lastUrl)
@@ -123,13 +131,13 @@ namespace SocialNetwork.Controllers
         // POST: LoginTest/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(string lastUrl, User newUser)
+        public ActionResult Register(User newUser)
         {
             try
             {
                 _userService.Create(newUser);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index");
             }
             catch
             {
@@ -142,17 +150,17 @@ namespace SocialNetwork.Controllers
 
             return View();
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(string id, User userToLogin)
+        public ActionResult Login(User userToLogin)
         {
             string idUser;
             bool canLogIn = _userService.Login(userToLogin, out idUser);
             if (canLogIn)
             {
                 HttpContext.Session.Set("UserId", System.Text.Encoding.ASCII.GetBytes(idUser));
-                return RedirectToAction(id.Split('-')[1], id.Split('-')[0]);
+                ViewBag.UserId = HttpContext.Session.GetString("UserId");
+                return Redirect("/User/Feed/" + idUser);
             }
             else
             {

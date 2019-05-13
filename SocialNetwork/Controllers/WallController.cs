@@ -23,17 +23,12 @@ namespace SocialNetwork.Controllers
         }
 
         // GET: Wall
-        public ActionResult Index(string id)
+        public ActionResult Index()
         {
-            if(id != null)
-            {
+      
                 
-                return View(_wallService.Get(id));
-            }
-            else
-            {
-                return NotFound();
-            }
+                return View(_wallService.Get());
+
         }
 
         // GET: Wall/Details/5

@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-
+using SocialNetwork.Models;
+using SocialNetWork.Models;
 namespace SocialNetwork.Models
 {
     public class User
@@ -13,20 +14,22 @@ namespace SocialNetwork.Models
         [BsonElement("Name")]
         public string Name { get; set; }
 
-        [BsonElement("Password")]
+        [BsonElement]
+        [BsonRequired]
         public string Password { get; set; }
 
-        [BsonElement("UserName")]
+        [BsonElement]
+        [BsonRequired]
         public string UserName { get; set; }
 
         [BsonElement("Following")]
-        public List<string> FollowingId { get; set; }
+        public List<follower> FollowingId { get; set; }
 
         [BsonElement("Followers")]
-        public List<string> FollowerId { get; set; }
+        public List<follower> Followers { get; set; }
 
         [BsonElement("Circles")]
-        public List<string> Circles{ get; set; }
+        public List<follower> Circles { get; set; }
 
         [BsonElement("Wall")]
         public string Wall { get; set; }

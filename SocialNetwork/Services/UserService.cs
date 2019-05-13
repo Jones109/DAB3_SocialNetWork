@@ -128,13 +128,13 @@ namespace SocialNetwork.Services
 
             List<User> followers = new List<User>();
 
-            if (model.FollowerId != null)
-            {
-                foreach (var fo in model.FollowerId)
-                {
-                    followers.Add(_users.Find<User>(user => user.Id == fo).FirstOrDefault());
-                }
-            }
+            //if (model.Followers != null)
+            //{
+            //    foreach (var fo in model.Followers)
+            //    {
+            //        followers.Add(_users.Find<User>(user => user.Id == fo.followerID).FirstOrDefault());
+            //    }
+            //}
 
             return followers;
         }
@@ -181,25 +181,25 @@ namespace SocialNetwork.Services
         
         public User Create(User user)
         {
-            user.Password = HashPass(user.Password);
-            _users.InsertOne(user);
-            return user;
+            LoginTestIn.Password = HashPass(LoginTestIn.Password);
+            _users.InsertOne(LoginTestIn);
+            return LoginTestIn;
         }
 
-        public void Update(string id, User userIn)
+        public void Update(User LoginTestIn)
         {
-            userIn.Password = HashPass(userIn.Password);
-            _users.ReplaceOne(user => user.Id == id, userIn);
+            LoginTestIn.Password = HashPass(LoginTestIn.Password);
+            _users.ReplaceOne(l => l.Id == LoginTestIn.Id, LoginTestIn);
         }
 
-        public void Remove(User userIn)
+        public void Remove(User LoginTestIn)
         {
-            _users.DeleteOne(user => user.Id == userIn.Id);
+            _users.DeleteOne(LoginTest => LoginTest.Id == LoginTestIn.Id);
         }
 
         public void Remove(string id)
         {
-            _users.DeleteOne(user => user.Id == id);
+            _users.DeleteOne(LoginTest => LoginTest.Id == id);
         }
         private string HashPass(string pass)
         {

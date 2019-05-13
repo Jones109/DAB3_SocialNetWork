@@ -1,8 +1,12 @@
 ﻿@using Microsoft.AspNetCore.Http
 @using System.Web
 @{
-    
 
+    var url = @Url.ActionContext.RouteData.Values;
+    if((url["Controller"].ToString() != "User" && url["Action"].ToString() != "Login") && String.IsNullOrEmpty(Context.Request.HttpContext.Session.GetString("UserId")))
+    {
+        Context.Response.Redirect("/User/Login");
+    }
 }
 <!DOCTYPE html>
 <html>
@@ -33,7 +37,6 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-
                     <partial name="_MongoLoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">

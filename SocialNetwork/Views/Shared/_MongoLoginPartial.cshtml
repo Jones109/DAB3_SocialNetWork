@@ -5,8 +5,8 @@
 
     var currentController = ViewContext.RouteData.Values["Controller"].ToString();
     var currentAction = ViewContext.RouteData.Values["Action"].ToString();
-    var registerUrl = "/LoginTest/Register/" + currentController + "-" + currentAction + "-";
-    var loginUrl = "/LoginTest/Login/" + currentController + "-" + currentAction + "-";
+    var registerUrl = "/User/Register/";
+    var loginUrl = "/User/Login/";
 
 
     var LoggedInAs = HttpContextAccessor.HttpContext.Session.GetString("UserId");

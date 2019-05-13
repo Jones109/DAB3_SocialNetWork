@@ -28,10 +28,10 @@ namespace SocialNetwork.Services
             return _circles.Find<Circle>(circle => circle.Id == id).FirstOrDefault();
         }
 
-        public Circle Create(Circle circle)
+        public string Create(Circle circle)
         {
             _circles.InsertOne(circle);
-            return circle;
+            return circle.Id;
         }
 
         public void Update(string id, Circle userIn)

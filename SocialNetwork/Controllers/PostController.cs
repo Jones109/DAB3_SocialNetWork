@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using SocialNetWork.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SocialNetwork.Models;
+using SocialNetwork.Services;
 
 namespace SocialNetWork.Controllers
 {
@@ -13,10 +15,14 @@ namespace SocialNetWork.Controllers
     public class PostController : Controller
     {
         private PostService _postService;
+        private LoginTestService _loginTestService;
+        
 
-        public PostController(PostService postService)
+        public PostController(PostService postService, LoginTestService loginTestService)
         {
             _postService = postService;
+            _loginTestService = loginTestService; ;
+            
         }
 
         // GET: Post
@@ -26,7 +32,7 @@ namespace SocialNetWork.Controllers
         }
 
         // GET: Post/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(string id)
         {
             return View();
         }
@@ -44,7 +50,11 @@ namespace SocialNetWork.Controllers
         {
             try
             {
+                LoginTest currentUser = _loginTestService.Get(HttpContext.Session.GetString("UserId"));
 
+                post.Comments = new List<Comment>();
+                post.CreationTime= DateTime.Now;
+                post.OwnerName = currentUser.userName;
                 _postService.Create(post);
 
                 return RedirectToAction(nameof(Index));
@@ -56,7 +66,7 @@ namespace SocialNetWork.Controllers
         }
 
         // GET: Post/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             return View();
         }
@@ -91,7 +101,7 @@ namespace SocialNetWork.Controllers
         }
 
         // GET: Post/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             return View();
         }
@@ -99,7 +109,7 @@ namespace SocialNetWork.Controllers
         // POST: Post/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Post post)
+        public ActionResult Delete(string id, Post post)
         {
             try
             {

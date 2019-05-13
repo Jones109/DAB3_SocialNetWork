@@ -52,9 +52,9 @@ namespace SocialNetwork.Controllers
 
         public IActionResult FollowPost(string id, string idToFollow)
         {
-            _userService.Follow(idToFollow, id);
-
+            if (_userService.Follow(idToFollow, id))
             return (RedirectToAction("Details", new {id = id}));
+            return Content("Could not add follower");
         }
 
         [HttpGet]

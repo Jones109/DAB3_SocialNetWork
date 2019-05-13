@@ -46,16 +46,24 @@ namespace SocialNetwork.Services
             if (follower != null && following != null)
             {
                 if (follower.FollowingId == null)
-                    follower.FollowingId = new List<string>();
+                    follower.FollowingId = new List<follower>();
+                if(following.Followers == null)
+                    following.Followers = new List<follower>();
 
-                follower.FollowingId.Add(idToFollow);
-                _users.ReplaceOne(u => u.Id == followerId, follower);
-            
-                if (following.FollowerId == null)
-                    following.FollowerId= new List<string>();
+                follower f1 = new follower { followerID = followerId, followerName = follower.Name };
+                follower f2 = new follower { followerID = idToFollow, followerName = following.Name };
 
-                following.FollowerId.Add(followerId);
-                _users.ReplaceOne(u => u.Id == idToFollow, following);
+                following.Followers.Add(f1);
+                follower.FollowingId.Add(f2);
+                try
+                {
+                    _users.ReplaceOne(u => u.Id == followerId, follower);
+                    _users.ReplaceOne(u => u.Id == idToFollow, following);
+                }
+                catch (MongoBulkWriteException)
+                {
+                    return false;
+                }
                 return true;
             }
 
@@ -73,7 +81,7 @@ namespace SocialNetwork.Services
             {
                 foreach (var wall in user.FollowingId)
                 {
-                    followingWall.Add(_walls.Find<Wall>(w => w.ID == wall).FirstOrDefault());
+                    followingWall.Add(_walls.Find<Wall>(w => w.ID == wall.followerID).FirstOrDefault());
                 }
             }
             else return posts;
@@ -114,7 +122,7 @@ namespace SocialNetwork.Services
             {
                 foreach (var fo in model.FollowingId)
                 {
-                    followers.Add(_users.Find<User>(user => user.Id == fo).FirstOrDefault());
+                    followers.Add(_users.Find<User>(user => user.Id == fo.followerID).FirstOrDefault());
                 }
             }
 
@@ -157,7 +165,7 @@ namespace SocialNetwork.Services
                             bool exist = false;
                             foreach (var modelUser in model.FollowingId)
                             {
-                                if (modelUser == user.Id || model.Id == user.Id)
+                                if (modelUser.followerID == user.Id || model.Id == user.Id)
                                     exist = true;
                             }
                             if (!exist)
@@ -181,9 +189,9 @@ namespace SocialNetwork.Services
         
         public User Create(User user)
         {
-            LoginTestIn.Password = HashPass(LoginTestIn.Password);
-            _users.InsertOne(LoginTestIn);
-            return LoginTestIn;
+            user.Password = HashPass(user.Password);
+            _users.InsertOne(user);
+            return user;
         }
 
         public void Update(User LoginTestIn)

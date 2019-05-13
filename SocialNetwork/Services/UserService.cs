@@ -39,26 +39,26 @@ namespace SocialNetwork.Services
 
         public bool Follow(string idToFollow, string followerId)
         {
-            var following = _users.Find<User>(u => u.Id == followerId).FirstOrDefault();
+            var UserToFollow = _users.Find<User>(u => u.Id == idToFollow).FirstOrDefault();
+            var follower = _users.Find<User>(u => u.Id == followerId).FirstOrDefault();
 
-            var follower = _users.Find<User>(u => u.Id == idToFollow).FirstOrDefault();
-
-            if (follower != null && following != null)
+            if (follower != null && UserToFollow != null)
             {
                 if (follower.FollowingId == null)
-                    follower.FollowingId = new List<follower>();
-                if(following.Followers == null)
-                    following.Followers = new List<follower>();
-
+                    follower.FollowingId = new List<string>();
+                if(UserToFollow.Followers == null)
+                    UserToFollow.Followers = new List<string>();
+                /*
                 follower f1 = new follower { followerID = followerId, followerName = follower.Name };
                 follower f2 = new follower { followerID = idToFollow, followerName = following.Name };
+                */
 
-                following.Followers.Add(f1);
-                follower.FollowingId.Add(f2);
+                UserToFollow.Followers.Add(followerId);
+                follower.FollowingId.Add(idToFollow);
                 try
                 {
-                    _users.ReplaceOne(u => u.Id == followerId, follower);
-                    _users.ReplaceOne(u => u.Id == idToFollow, following);
+                    _users.ReplaceOne<User>(u => u.Id == idToFollow, UserToFollow);
+                    _users.ReplaceOne<User>(u => u.Id == followerId, follower);
                 }
                 catch (MongoBulkWriteException)
                 {
@@ -81,7 +81,7 @@ namespace SocialNetwork.Services
             {
                 foreach (var wall in user.FollowingId)
                 {
-                    followingWall.Add(_walls.Find<Wall>(w => w.ID == wall.followerID).FirstOrDefault());
+                    followingWall.Add(_walls.Find<Wall>(w => w.ID == wall).FirstOrDefault());
                 }
             }
             else return posts;
@@ -122,7 +122,7 @@ namespace SocialNetwork.Services
             {
                 foreach (var fo in model.FollowingId)
                 {
-                    followers.Add(_users.Find<User>(user => user.Id == fo.followerID).FirstOrDefault());
+                    followers.Add(_users.Find<User>(user => user.Id == fo).FirstOrDefault());
                 }
             }
 
@@ -136,13 +136,13 @@ namespace SocialNetwork.Services
 
             List<User> followers = new List<User>();
 
-            //if (model.Followers != null)
-            //{
-            //    foreach (var fo in model.Followers)
-            //    {
-            //        followers.Add(_users.Find<User>(user => user.Id == fo.followerID).FirstOrDefault());
-            //    }
-            //}
+            if (model.Followers != null)
+            {
+                foreach (var fo in model.Followers)
+                {
+                    followers.Add(_users.Find<User>(user => user.Id == fo).FirstOrDefault());
+                }
+            }
 
             return followers;
         }
@@ -165,7 +165,7 @@ namespace SocialNetwork.Services
                             bool exist = false;
                             foreach (var modelUser in model.FollowingId)
                             {
-                                if (modelUser.followerID == user.Id || model.Id == user.Id)
+                                if (modelUser == user.Id || model.Id == user.Id)
                                     exist = true;
                             }
                             if (!exist)

@@ -23,13 +23,13 @@ namespace SocialNetwork.Models
         public string UserName { get; set; }
 
         [BsonElement("Following")]
-        public List<follower> FollowingId { get; set; }
+        public List<string> FollowingId { get; set; }
 
         [BsonElement("Followers")]
-        public List<follower> Followers { get; set; }
+        public List<string> Followers { get; set; }
 
         [BsonElement("Circles")]
-        public List<follower> Circles { get; set; }
+        public List<string> Circles { get; set; }
 
         [BsonElement("Wall")]
         public string Wall { get; set; }

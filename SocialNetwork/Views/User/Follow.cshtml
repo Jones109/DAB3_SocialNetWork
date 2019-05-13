@@ -32,7 +32,7 @@
                         <a asp-action="Details" asp-route-id="@user.Id">Details</a>
                     </td>
                     <td>
-                        <a class="btn-dark" asp-action="FollowPost" asp-route-idToFollow="@Model.User.Id" asp-route-id="@user.Id">Follow</a>
+                        <a class="btn-dark" asp-action="FollowPost" asp-route-idToFollow="@user.Id" asp-route-id="@Model.User.Id">Follow</a>
                     </td>
                 </tr>
             }

@@ -52,9 +52,20 @@ namespace SocialNetwork.Controllers
             try
             {
                 Debug.WriteLine(circle.Name);
-                var loggedInUser = _loginTestService.Get(HttpContext.Session.GetString("UserId"));
-                circle.OwnerId = loggedInUser.userID;
 
+                var loggedInUser = _loginTestService.Get(HttpContext.Session.GetString("UserId"));
+
+                try
+                {
+                    var loggedInUserId = loggedInUser.userID;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return Unauthorized();
+                }
+
+                circle.OwnerId = loggedInUser.userID;
 
                 var wall = new Wall()
                 {

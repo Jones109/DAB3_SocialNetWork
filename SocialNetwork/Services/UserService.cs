@@ -15,7 +15,7 @@ namespace SocialNetwork.Services
         {
             var client = new MongoClient(config.GetConnectionString("SocialNetworkDb"));
             var database = client.GetDatabase("SocialNetworkDb");
-            _users = database.GetCollection<User>("users");
+            _users = database.GetCollection<User>("Users");
         }
 
         public List<User> Get()

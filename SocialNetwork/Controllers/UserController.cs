@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SocialNetwork.Models;
 using SocialNetwork.Services;
+using SocialNetWork.Models;
 
 namespace SocialNetwork.Controllers
 {
@@ -13,6 +14,7 @@ namespace SocialNetwork.Controllers
     public class UserController : Controller
     {
         private readonly UserService _userService;
+        private readonly PostService _postService;
         
         public UserController(UserService userService)
         {
@@ -26,9 +28,11 @@ namespace SocialNetwork.Controllers
             return View(users);
         }
 
-        public IActionResult Feed()
+        public IActionResult Feed(string id)
         {
-            return View();
+            var model = _userService.Get(id);
+
+            return View(model);
         }
 
         public IActionResult Details()

@@ -13,13 +13,25 @@ namespace SocialNetwork.Controllers
     public class UserController : Controller
     {
         private readonly UserService _userService;
-
+        
         public UserController(UserService userService)
         {
             _userService = userService;
         }
 
         public IActionResult Index()
+        {
+            var users = _userService.Get();
+
+            return View(users);
+        }
+
+        public IActionResult Feed()
+        {
+            return View();
+        }
+
+        public IActionResult Details()
         {
             return View();
         }

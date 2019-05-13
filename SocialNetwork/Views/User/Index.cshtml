@@ -1,7 +1,14 @@
-﻿
+﻿@model List<User>
+
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Userfar</h1>
+<h1>Users</h1>
 
+@{
+    foreach (var user in Model)
+    {
+        <li> @user.Name </li>
+    }
+}

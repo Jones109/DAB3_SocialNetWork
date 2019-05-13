@@ -17,6 +17,12 @@
 
 
   <ItemGroup>
+    <Folder Include="Pages\" />
+    <Folder Include="Views\Comment\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
     <Reference Include="System.Web.Http">
       <HintPath>..\..\..\..\source\repos\Umbraco_Mathias\Umbraco_Mathias\bin\System.Web.Http.dll</HintPath>
     </Reference>

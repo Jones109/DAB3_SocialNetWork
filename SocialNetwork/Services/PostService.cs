@@ -21,6 +21,11 @@ namespace SocialNetWork.Models
             return _posts.Find(post => true).ToList();
         }
 
+        public List<Post> GetPostForWall(string id)
+        {
+            return _posts.Find(post => post.Id == id).ToList();
+        }
+
         public Post Get(string id)
         {
             return _posts.Find<Post>(post => post.Id == id).FirstOrDefault();

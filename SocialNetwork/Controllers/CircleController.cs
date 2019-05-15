@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SocialNetwork.Models;
 using SocialNetwork.Services;
+using SocialNetwork.ViewModels;
+using SocialNetWork.Models;
 
 namespace SocialNetwork.Controllers
 {
@@ -17,10 +19,11 @@ namespace SocialNetwork.Controllers
         private readonly CircleService _circleService;
         private readonly UserService _userService;
         private readonly WallService _wallService;
+        private readonly PostService _postService;
 
-
-        public CircleController(CircleService circleService, UserService userService, WallService wallService)
+        public CircleController(CircleService circleService, UserService userService, WallService wallService, PostService postService)
         {
+            _postService = postService;
             _wallService = wallService;
             _circleService = circleService;
             _userService = userService;
@@ -73,7 +76,14 @@ namespace SocialNetwork.Controllers
         [Route("Circle/ShowCircle/{id}")]
         public IActionResult ShowCircle(string circleId)
         {
-            return View(_circleService.Get(circleId));
+            var viewModel = new CircleViewModel {Circle = _circleService.Get(circleId)};
+
+            viewModel.Wall = _wallService.Get(viewModel.Circle.WallId);
+
+            if(viewModel.Wall != null)
+                viewModel.Posts = _postService.GetPostForWall(viewModel.Wall.ID);
+
+            return View(viewModel);
         }
 
         public IActionResult Delete(string id)

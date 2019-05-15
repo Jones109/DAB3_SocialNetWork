@@ -1,10 +1,58 @@
-﻿@model SocialNetwork.Models.Circle
+﻿@model SocialNetwork.ViewModels.CircleViewModel
 
 @{
     ViewData["Title"] = "Circle";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Circle</h1>
+
+@if (!Model.Circle.Name.Contains("Circle") || !Model.Circle.Name.Contains("circle"))
+{
+    var title = Model.Circle.Name + "Circle";
+    <h1>@title</h1>
+}
+else
+{
+    <h1>@Model.Circle.Name</h1>
+}
+
+@{
+    var circleTableId = Model.Circle.Id + "circleTableId";
+}
+<table id="@circleTableId">
+    <thead>
+    <tr>
+        <th>@Html.DisplayFor(circle => circle.Wall.type)</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+    @if (Model.Wall != null)
+    {
+        if (Model.Wall.Followers != null)
+        {
+            foreach (var item in Model.Wall.Followers)
+            {
+                <h1>@item.followerName</h1>
+            }
+        }
+        else
+        {
+                <h1>There is a wall, but no followers...</h1>
+        }
+            
+    }
+    else
+    {
+        <h1>No wall yet</h1>
+        
+    }
+    
+    </tbody>
+</table>
+
+
+
+
 
 @Html.ActionLink("Delete", "Delete"/*, new {  id=item.Id }*/)

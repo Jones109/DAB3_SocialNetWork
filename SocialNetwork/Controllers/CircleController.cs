@@ -15,12 +15,15 @@ namespace SocialNetwork.Controllers
     public class CircleController : Controller
     {
         private readonly CircleService _circleService;
-        private LoginTestService _loginTestService;
+        private readonly UserService _userService;
+        private readonly WallService _wallService;
 
-        public CircleController(CircleService circleService, LoginTestService loginTestService)
+
+        public CircleController(CircleService circleService, UserService userService, WallService wallService)
         {
+            _wallService = wallService;
             _circleService = circleService;
-            _loginTestService = loginTestService;
+            _userService = userService;
         }
 
         public IActionResult Index(string id)
@@ -30,15 +33,11 @@ namespace SocialNetwork.Controllers
 
         public IActionResult Create()
         {
-            try
-            {
-                var user = _loginTestService.Get(HttpContext.Session.GetString("UserId")).userID;
-
+            
+            if(!string.IsNullOrEmpty(_circleService.GetLoggedInUserId()))
                 return View();
-            }
-            catch (Exception e)
+            else
             {
-                Console.WriteLine(e);
                 return Unauthorized();
             }
             
@@ -49,43 +48,40 @@ namespace SocialNetwork.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Circle circle)
         {
-            try
+
+            circle.OwnerId = _circleService.GetLoggedInUserId();
+
+            var wall = new Wall()
             {
-                Debug.WriteLine(circle.Name);
+                owner = _userService.Get(circle.OwnerId).Name,
+                Followers = new List<follower>(),
+                BlackList = new List<blacklistedUser>(),
+                ownerID = _circleService.GetLoggedInUserId()
+            };
 
-                var loggedInUser = _loginTestService.Get(HttpContext.Session.GetString("UserId"));
+            _wallService.Create(wall);
 
-                try
-                {
-                    var loggedInUserId = loggedInUser.userID;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    return Unauthorized();
-                }
+            //add circle.wallId after creating wall
+            circle.WallId = wall.ID;
 
-                circle.OwnerId = loggedInUser.userID;
+            // sæt returværdi på Create, så vi kan gå til den circle vi lige har created.
+            var circleId = _circleService.Create(circle);
+            return RedirectToAction("Index");
 
-                var wall = new Wall()
-                {
-                    owner = loggedInUser.userName,
-                    Followers = new List<follower>(),
-                    BlackList = new List<blacklistedUser>(),
-                    ownerID = loggedInUser.userID
-                };
-
-
-                //add circle.wallId after creating wall
-                
-                // sæt returværdi på Create, så vi kan gå til den circle vi lige har created.
-                var circleId = _circleService.Create(circle);
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
+
+        [Route("Circle/ShowCircle/{id}")]
+        public IActionResult ShowCircle(string circleId)
+        {
+            return View(_circleService.Get(circleId));
+        }
+
+        public IActionResult Delete(string id)
+        {
+            _circleService.Remove(id);
+            return RedirectToAction("Index");
+            
+        }
+
     }
 }

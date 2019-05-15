@@ -12,41 +12,44 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.WallId)
-            </th>
+            </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.OwnerId)
-            </th>
-            <th></th>
+            </th>*@
+            @*<th></th>*@
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+
+            @Html.HiddenFor(modelItem => item.Id)
+
+
+            @Html.HiddenFor(modelItem => item.WallId)
+
             <td>
-                @Html.DisplayFor(modelItem => item.Id)
+                @*@Html.ActionLink(item.Name, "ShowCircle", "Circle",item.Id)*@
+                <a asp-action="ShowCircle" asp-route-id="@item.Id" asp-route-circleId="@item.Id" >@item.Name</a>
             </td>
+
+            @Html.HiddenFor(modelItem => item.OwnerId)
+
             <td>
-                @Html.DisplayFor(modelItem => item.WallId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OwnerId)
-            </td>
-            <td>
-                @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
-            </td>
+                @Html.ActionLink("Delete", "Delete", new {  id=item.Id })
+            </td> @**@
+            @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+        *@
+
         </tr>
 }
     </tbody>

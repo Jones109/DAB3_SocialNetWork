@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using SocialNetwork.Models;
@@ -11,11 +12,18 @@ namespace SocialNetwork.Services
     public class CircleService
     {
         private readonly IMongoCollection<Circle> _circles;
+
         public CircleService(IConfiguration config)
         {
             var client = new MongoClient(config.GetConnectionString("SocialNetworkDb"));
             var database = client.GetDatabase("SocialNetworkDb");
             _circles = database.GetCollection<Circle>("circles");
+        }
+
+        public string GetLoggedInUserId()
+        {
+            IHttpContextAccessor httpContextAccessor = new HttpContextAccessor();
+            return httpContextAccessor.HttpContext.Session.GetString("UserId");
         }
 
         public List<Circle> Get()
@@ -42,6 +50,21 @@ namespace SocialNetwork.Services
         public void Remove(Circle circleIn)
         {
             _circles.DeleteOne(circle => circle.Id == circleIn.Id);
+        }
+
+        public bool DeleteWhereCircleIsNull()
+        {
+            try
+            {
+                _circles.DeleteOne(circle => circle.Name == null);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+            
         }
 
         public void Remove(string id)

@@ -109,6 +109,9 @@ namespace SocialNetwork.Services
                     Wall temp = _walls.Find(w => w.ID == wallId).FirstOrDefault();
                     bool IsBlacklisted = false;
 
+                    if (temp.BlackList == null)
+                        temp.BlackList = new List<blacklistedUser>();
+
                     foreach (var blacklist in temp.BlackList)
                     {
                         if (blacklist.userID == id)

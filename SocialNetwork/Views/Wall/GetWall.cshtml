@@ -45,26 +45,29 @@
             <div id="@p.Id" class="comments">
                 @foreach (var comment in p.Comments)
                 {
-                    <div class="container comment p-3">
-
-                        <p class="float-right">
-                            @comment.OwnerName
-                        </p>
-                        <p class="float-right">
-                            @if (comment.IsEdited)
-                            {
-                                @:created: @comment.LastEdited
-                            }
-                            else
-                            {
-                                @:last edited @comment.LastEdited
-                            }
-                        </p>
-                        <a href="/Comment/Edit/@comment.Id"><i class="fa fa-pen"></i></a>
-                        <p class="clearfix">
+                <div class="container comment p-3">
+                    
+                    <a class="float-right p-0 pr-2 m-0" href="/Comment/Edit/@comment.Id"><i class="fa fa-pen"></i></a>
+                    <a class="float-right p-0 pr-3 m-0" href="/Comment/Delete/@comment.Id"><i class="fa fa-trash"></i></a>
+                    <p class="float-left p-0 pr-2 m-0">
+                        <b>  @comment.OwnerName: </b>
+                    </p>
+                    <p class="float-right pr-5">
+                        @if (comment.IsEdited)
+                        {
+                            @:created: @comment.LastEdited
+                        }
+                        else
+                        {
+                            @:last edited @comment.LastEdited
+                        }
+                    </p>
+                    <div class="clearfix mt-4">
+                        <p >
                             @comment.Text
                         </p>
                     </div>
+                </div>
                 }
             </div>
         }

@@ -228,7 +228,7 @@ namespace SocialNetWork.Controllers
             //Combine filepath
             var imgUrl = Path.Combine(
                 Directory.GetCurrentDirectory(), "wwwroot/PostPictures", fileName);
-
+            
             //Write code to file
             using (var stream = new FileStream(imgUrl, FileMode.Create))
             {

@@ -9,7 +9,7 @@
             Name
         </th>
         <th>
-            Feed
+            Wall
         </th>
         <th>
             Profile
@@ -26,13 +26,13 @@
                         @user.Name
                     </td>
                     <td>
-                        <a asp-action="Feed" asp-route-id="@user.Id">Feed</a>
+                        <a asp-controller="Wall" asp-action="GetWall" asp-route-type="User" asp-route-id="@user.Id">Wall</a>
                     </td>
                     <td>
                         <a asp-action="Details" asp-route-id="@user.Id">Details</a>
                     </td>
                     <td>
-                        <a class="btn-dark" asp-action="FollowPost" asp-route-idToFollow="@user.Id" asp-route-id="@Model.User.Id">Follow</a>
+                        <a class="btn-dark btn " asp-action="FollowPost" asp-route-idToFollow="@user.Id" asp-route-id="@Model.User.Id">Follow</a>
                     </td>
                 </tr>
             }

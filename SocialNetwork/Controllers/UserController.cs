@@ -32,7 +32,10 @@ namespace SocialNetwork.Controllers
         public IActionResult Index(string id)
         {
             string current = HttpContext.Session.GetString("UserId");
+                if (current != null)
             return View(_userService.ConstructViewModel(current));
+
+                return RedirectToAction("Login");
         }
 
         public IActionResult Feed(string id)
@@ -47,13 +50,15 @@ namespace SocialNetwork.Controllers
             string current = HttpContext.Session.GetString("UserId");
             return View(_userService.ConstructViewModel(current));
         }
-        /*
-        public IActionResult Follow(string id)
+
+        public IActionResult BlackList(string idToBlacklist)
         {
-            string current = HttpContext.Session.GetString("UserId");
-            return View(_userService.ConstructViewModel(current));
+            string id = HttpContext.Session.GetString("UserId");
+            _userService.Blacklist(id, idToBlacklist);
+
+            return RedirectToAction("Details");
         }
-        */
+
         public IActionResult FollowPost(string id, string idToFollow)
         {
             if (_userService.Follow(idToFollow, id))
@@ -166,7 +171,8 @@ namespace SocialNetwork.Controllers
             }
         }
 
-        public ActionResult Login(string id)
+
+        public ActionResult Login()
         {
 
             return View();
@@ -175,7 +181,7 @@ namespace SocialNetwork.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(User userToLogin)
         {
-            string idUser;
+            string idUser = new string("");
             bool canLogIn = _userService.Login(userToLogin, out idUser);
             if (canLogIn)
             {
@@ -185,6 +191,7 @@ namespace SocialNetwork.Controllers
             }
             else
             {
+                ViewBag.Message = "Username and password did not match";
                 return View();
             }
         }

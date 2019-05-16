@@ -29,14 +29,59 @@ namespace SocialNetwork.Controllers
             _userService = userService;
         }
 
-        public IActionResult Index(string id)
+        public IActionResult Index()
         {
-            var user = _userService.Get(id);
 
             var circles = _circleService.Get();
             
 
             return View(circles);
+        }
+
+        public IActionResult MyCircles(string id)
+        {
+            var user = _userService.Get(id);
+
+            Debug.WriteLine(user.Id);
+
+            var wallsWhereUserIsFollower = _wallService.Get()
+                .Where(wall => wall.Followers.Any(follower => follower.followerID == id)).ToList();
+
+            foreach (var wall in _wallService.Get())
+            {
+                foreach (var wallFollower in wall.Followers)
+                {
+                    Debug.WriteLine(wallFollower.followerID);
+                }
+            }
+
+            foreach (var wall in wallsWhereUserIsFollower)
+            {
+                Debug.WriteLine(wall.ID);
+            }
+
+            var circles = _circleService.Get();
+
+            foreach (var circle in circles)
+            {
+                Debug.WriteLine(circle.Id);
+            }
+
+            var circlesResult = new List<Circle>();
+
+            foreach (var wall in wallsWhereUserIsFollower)
+            {
+                foreach (var circle in circles)
+                {
+                    if (wall.ID == circle.WallId)
+                    {
+                        circlesResult.Add(circle);
+                    }
+                }
+            }
+
+
+            return View(circlesResult);
         }
 
         public IActionResult Create()

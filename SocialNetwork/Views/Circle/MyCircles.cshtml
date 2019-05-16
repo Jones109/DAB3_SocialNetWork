@@ -3,17 +3,29 @@
 @model IEnumerable<SocialNetwork.Models.Circle>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Create";
     var LoggedInAsId = HttpContextAccessor.HttpContext.Session.GetString("UserId");
 }
 
-<h1>Circles</h1>
+<h1>My Circles</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
+<div>
+    <a asp-action="Create">Create Circle</a>
+</div>
+<span style="display: table; padding-top: 20px; padding-bottom: 20px; margin: 0 auto;">
+    Look for circles to join in the Circles page
+</span>
+
+@if (Model == null)
+{
+    <div>
+        Model is null
+    </div>
+}
+else
+{
+    <table class="table">
+        <thead>
         <tr>
             @*<th>
                     @Html.DisplayNameFor(model => model.Id)
@@ -29,8 +41,8 @@
                 </th>*@
             @*<th></th>*@
         </tr>
-    </thead>
-    <tbody>
+        </thead>
+        <tbody>
         @foreach (var item in Model)
         {
             <tr>
@@ -68,5 +80,6 @@
 
             </tr>
         }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+}

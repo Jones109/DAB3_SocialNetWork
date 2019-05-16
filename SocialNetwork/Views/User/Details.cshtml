@@ -1,5 +1,7 @@
 ﻿@using System.Security.Cryptography
+@using Microsoft.AspNetCore.Http
 @model SocialNetwork.ViewModels.UserViewModel
+@inject IHttpContextAccessor context
 
 @if (Model != null)
 {
@@ -10,18 +12,23 @@
         foreach (var follower in Model.Followers)
         {
             <a asp-action="Details" asp-route-id="@follower.Id">@follower.Name</a>
-            bool exist = false;
-            foreach (var blacklist in Model.Blacklisted)
+
+            if (Model.User.Id == context.HttpContext.Session.GetString("UserId"))
             {
-                if (blacklist.Id == follower.Id)
+                bool exist = false;
+                foreach (var blacklist in Model.Blacklisted)
                 {
-                    exist = true;
+                    if (blacklist.Id == follower.Id)
+                    {
+                        exist = true;
+                    }
+                }
+                if (!exist)
+                {
+                    <a class="btn-dark btn ml-3 pt-1 pb-1" asp-action="BlackList" asp-route-idToBlacklist="@follower.Id">Blacklist</a>
                 }
             }
-            if (!exist)
-            {
-                <a class="btn-dark btn ml-3 pt-1 pb-1" asp-action="BlackList" asp-route-idToBlacklist="@follower.Id">Blacklist</a>
-            }
+
         }
     }
     else

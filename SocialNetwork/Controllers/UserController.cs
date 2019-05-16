@@ -32,7 +32,10 @@ namespace SocialNetwork.Controllers
         public IActionResult Index(string id)
         {
             string current = HttpContext.Session.GetString("UserId");
+                if (current != null)
             return View(_userService.ConstructViewModel(current));
+
+                return RedirectToAction("Login");
         }
 
         public IActionResult Feed(string id)

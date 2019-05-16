@@ -38,9 +38,8 @@ namespace SocialNetwork.Controllers
         public IActionResult Feed(string id)
         {
             string current = HttpContext.Session.GetString("UserId");
-            var model = _userService.Get(current);
 
-            return View(model);
+            return View(_userService.ConstructViewModel(current));
         }
 
         public IActionResult Details(string id)
@@ -83,17 +82,7 @@ namespace SocialNetwork.Controllers
         [HttpPost]
         public ActionResult<User> Create(User user)
         {
-            Wall newWall = _wallService.Create(new Wall()
-            {
-                BlackList = new List<blacklistedUser>(),
-                Followers = new List<follower>(),
-                owner = user.Name,
-                ownerID = user.Id,
-                postIDs = new List<string>(),
-                type = "User"
-            });
-
-            user.Wall = newWall.ID;
+            
             _userService.Create(user);
 
             return CreatedAtRoute("GetUser", new { id = user.Id.ToString() }, user);
@@ -150,9 +139,23 @@ namespace SocialNetwork.Controllers
         {
             try
             {
-                _userService.Create(newUser);
+                newUser = _userService.Create(newUser);
 
-                return RedirectToAction("Index");
+                Wall newWall = _wallService.Create(new Wall()
+                {
+                    BlackList = new List<blacklistedUser>(),
+                    Followers = new List<follower>(),
+                    owner = newUser.Name,
+                    ownerID = newUser.Id,
+                    postIDs = new List<PostId>(),
+                    type = "User"
+                });
+
+                newUser.Wall = newWall.ID;
+
+                
+
+                return RedirectToAction("Login");
             }
             catch
             {

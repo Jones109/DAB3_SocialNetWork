@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -17,25 +18,27 @@ namespace SocialNetwork.Controllers
     {
         private readonly UserService _userService;
         private readonly PostService _postService;
+        private readonly WallService _wallService;
         private readonly UserViewModel _vm;
 
-        public UserController(UserService userService, PostService postService)
+        public UserController(UserService userService, PostService postService, WallService wallService)
         {
             _userService = userService;
             _postService = postService;
+            _wallService = wallService;
             _vm = new UserViewModel();
         }
 
         public IActionResult Index(string id)
         {
-            var users = _userService.Get();
-
-            return View(users);
+            string current = HttpContext.Session.GetString("UserId");
+            return View(_userService.ConstructViewModel(current));
         }
 
         public IActionResult Feed(string id)
         {
-            var model = _userService.Get(id);
+            string current = HttpContext.Session.GetString("UserId");
+            var model = _userService.Get(current);
 
             return View(model);
         }
@@ -44,12 +47,13 @@ namespace SocialNetwork.Controllers
         {
             return View(_userService.ConstructViewModel(id));
         }
-
+        /*
         public IActionResult Follow(string id)
         {
-            return View(_userService.ConstructViewModel(id));
+            string current = HttpContext.Session.GetString("UserId");
+            return View(_userService.ConstructViewModel(current));
         }
-
+        */
         public IActionResult FollowPost(string id, string idToFollow)
         {
             if (_userService.Follow(idToFollow, id))
@@ -79,6 +83,17 @@ namespace SocialNetwork.Controllers
         [HttpPost]
         public ActionResult<User> Create(User user)
         {
+            Wall newWall = _wallService.Create(new Wall()
+            {
+                BlackList = new List<blacklistedUser>(),
+                Followers = new List<follower>(),
+                owner = user.Name,
+                ownerID = user.Id,
+                postIDs = new List<PostId>(),
+                type = "User"
+            });
+
+            user.Wall = newWall.ID;
             _userService.Create(user);
 
             return CreatedAtRoute("GetUser", new { id = user.Id.ToString() }, user);
@@ -168,16 +183,30 @@ namespace SocialNetwork.Controllers
             }
         }
 
-        public ActionResult LogOut()
+
+        // GET: LoginTest/Edit/5
+        public ActionResult Edit(string id)
         {
-            var LoggedInAs = HttpContext.Session.GetString("UserId");
+            return View(_userService.Get(id));
+        }
 
-            if(!string.IsNullOrEmpty(LoggedInAs))
+        // POST: LoginTest/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(string id, User updatedUser)
+        {
+            try
             {
-                HttpContext.Session.Remove("UserId");
-            }
+                updatedUser.Id = id;
+                _userService.Update(updatedUser);
 
-            return RedirectToAction("Index", "Home", "");
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                Debug.WriteLine("failed");
+                return View();
+            }
         }
     }
 }

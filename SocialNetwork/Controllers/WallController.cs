@@ -48,6 +48,7 @@ namespace SocialNetwork.Controllers
         {
             try
             {
+                wall.postIDs= new List<PostId>();
                 _wallService.Create(wall);
                 return RedirectToAction(nameof(Index));
             }

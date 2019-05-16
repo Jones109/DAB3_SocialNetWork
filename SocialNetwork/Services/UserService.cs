@@ -7,6 +7,7 @@ using MongoDB.Driver;
 using SocialNetwork.Models;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Http;
 using SocialNetwork.ViewModels;
 
 namespace SocialNetwork.Services
@@ -69,7 +70,7 @@ namespace SocialNetwork.Services
 
             return false;
         }
-
+        
         public List<Post> GetFeedPosts(string id)
         {
             List<Post> posts = new List<Post>();

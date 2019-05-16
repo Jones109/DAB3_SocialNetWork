@@ -14,6 +14,8 @@ namespace SocialNetwork.Models
     public class Wall
     {
 
+       
+
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string ID { get; set; }

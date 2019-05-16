@@ -1,5 +1,7 @@
 ﻿@using System.Security.Cryptography
+@using Microsoft.AspNetCore.Http
 @model SocialNetwork.ViewModels.UserViewModel
+@inject IHttpContextAccessor context
 
 @if (Model != null)
 {
@@ -7,27 +9,27 @@
     <h3>Followers</h3>
     if (Model.Followers.Count != 0)
     {
-        <ul class="list-group">
-            @foreach (var follower in Model.Followers)
+        foreach (var follower in Model.Followers)
+        {
+            <a asp-action="Details" asp-route-id="@follower.Id">@follower.Name</a>
+
+            if (Model.User.Id == context.HttpContext.Session.GetString("UserId"))
             {
-                <li class="list-group-item">
-                    <a asp-action="Details" asp-route-id="@follower.Id">@follower.Name</a>
-                    bool exist = false;
-                    @foreach (var blacklist in Model.Blacklisted)
-                    {
+                bool exist = false;
+                foreach (var blacklist in Model.Blacklisted)
+                {
                     if (blacklist.Id == follower.Id)
                     {
-                    exist = true;
+                        exist = true;
                     }
-                    }
-                    if (!exist)
-                    {
+                }
+                if (!exist)
+                {
                     <a class="btn-dark btn ml-3 pt-1 pb-1" asp-action="BlackList" asp-route-idToBlacklist="@follower.Id">Blacklist</a>
-                    }
-
-                </li>
+                }
             }
-        </ul>
+
+        }
     }
     else
     {
@@ -36,15 +38,10 @@
     <h3>Following</h3>
     if (Model.Following.Count != 0)
     {
-        <ul class="list-group w-25">
-            @foreach (var following in Model.Following)
-            {
-                <li class="list-group-item">
-                    <a asp-action="Details" asp-route-id="@following.Id">@following.Name</a>
-                    <a class="float-right" asp-action="GetWall" asp-controller="Wall" asp-route-id="@following.Id" asp-route-type="User">Wall</a>
-                </li>
-            }
-        </ul>
+        foreach (var following in Model.Following)
+        {
+            <a asp-action="Details" asp-route-id="@following.Id">@following.Name</a>
+        }
     }
     else
     {

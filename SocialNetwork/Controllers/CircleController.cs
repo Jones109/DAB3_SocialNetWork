@@ -87,7 +87,7 @@ namespace SocialNetwork.Controllers
 
             _circleService.Update(circle.Id, circle);
             
-            return RedirectToAction("Index");
+            return RedirectToAction("GetWall","Wall", new {id = circleId, type = "Circle"});
 
         }
 

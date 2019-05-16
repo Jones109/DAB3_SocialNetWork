@@ -139,8 +139,9 @@ namespace SocialNetwork.Controllers
         {
             try
             {
+                string pass = newUser.Password;
                 newUser = _userService.Create(newUser);
-
+                
                 Wall newWall = _wallService.Create(new Wall()
                 {
                     BlackList = new List<blacklistedUser>(),
@@ -152,8 +153,9 @@ namespace SocialNetwork.Controllers
                 });
 
                 newUser.Wall = newWall.ID;
+                newUser.Password = pass;
 
-                
+                _userService.Update(newUser);
 
                 return RedirectToAction("Login");
             }

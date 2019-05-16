@@ -21,7 +21,10 @@ namespace SocialNetWork.Models
             [BsonElement("OwnerName")]
             public string OwnerName { get; set; }
 
-            [BsonElement("CreationTime")]
+            [BsonElement("OwnerId")]
+            public string OwnerId { get; set; }
+
+        [BsonElement("CreationTime")]
             public DateTime CreationTime { get; set; }
 
             [BsonElement("Text")]

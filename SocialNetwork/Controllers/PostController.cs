@@ -55,10 +55,12 @@ namespace SocialNetWork.Controllers
         {
             try
             {
-                User currentUser = _userService.Get(HttpContext.Session.GetString("UserId"));
+                string currentUserId = HttpContext.Session.GetString("UserId");
+                User currentUser = _userService.Get(currentUserId);
 
                 Post post = new Post();
 
+                post.OwnerId = currentUserId;
                 post.Text = text;
                 post.WallId = currentUser.Wall;
                 post.Comments = new List<Comment>();
@@ -102,16 +104,27 @@ namespace SocialNetWork.Controllers
         // POST: Post/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateForCircle(Post post)
+        public ActionResult CreateForCircle(string wallId ,string text, IFormFile file)
         {
             try
             {
-                User currentUser = _userService.Get(HttpContext.Session.GetString("UserId"));
+                string currentUserId = HttpContext.Session.GetString("UserId");
+                User currentUser = _userService.Get(currentUserId);
 
-                
+                Post post = new Post();
+                post.OwnerId = currentUserId;
+                post.Text = text;
+                post.WallId = wallId;
                 post.Comments = new List<Comment>();
                 post.CreationTime = DateTime.Now;
                 post.OwnerName = currentUser.UserName;
+
+                if (file != null)
+                {
+                    string path = null;
+                    if (UploadPicture(file, ref path))
+                        post.ImgUri = path;
+                }
 
                 Post createdPost = _postService.Create(post);
 

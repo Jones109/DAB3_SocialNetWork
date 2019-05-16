@@ -1,32 +1,24 @@
 ﻿@model SocialNetWork.Models.Post
 
 @{
-    ViewData["Title"] = "CreateForCircle";
+    ViewData["Title"] = "Create";
 }
 
-<h1>CreateForCircle</h1>
+<h1>Create</h1>
 
 <h4>Post</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="CreateForCircle">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+        <form asp-action="CreateForCircle" method="post" enctype="multipart/form-data">
             <div class="form-group">
-                <label asp-for="WallId" class="control-label"></label>
-                <input asp-for="WallId" class="form-control" />
-                <span asp-validation-for="WallId" class="text-danger"></span>
+                <input type="text" name="wallId" id="WallId" placeholder="Write Circle id" />
             </div>
             <div class="form-group">
-                <label asp-for="Text" class="control-label"></label>
-                <input asp-for="Text" class="form-control" />
-                <span asp-validation-for="Text" class="text-danger"></span>
+                <input type="text" name="text" id="text" placeholder="Write post text" />
             </div>
             <div class="form-group">
-                <label asp-for="ImgUri" class="control-label"></label>
-                <input asp-for="ImgUri" class="form-control" />
-                <span asp-validation-for="ImgUri" class="text-danger"></span>
+                <input type="file" name="file" id="file" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

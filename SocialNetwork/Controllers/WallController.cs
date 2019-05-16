@@ -108,7 +108,7 @@ namespace SocialNetwork.Controllers
         public ActionResult GetWall(string id,string type)
         {
             var wall = _wallService.Get(id, type);
-            var Posts = _postService.GetPostForWall(wall.ID);
+            var Posts = _postService.Get().Where(p => p.WallId == wall.ID).ToList();
             GetWallViewModel viewModel = new GetWallViewModel();
             viewModel.wall = wall;
             viewModel.posts = Posts;

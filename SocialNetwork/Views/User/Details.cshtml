@@ -1,9 +1,6 @@
 ﻿@using System.Security.Cryptography
 @model SocialNetwork.ViewModels.UserViewModel
 
-
-
-
 @if (Model != null)
 {
     <h2>@Model.User.Name Profile</h2>
@@ -54,6 +51,18 @@
     else
     {
         <p>None blacklisted</p>
+    }
+    <h3>Circles</h3>
+    if (Model.Circles != null)
+    {
+        foreach (var circle in Model.Circles)
+        {
+            <p>Circle: @circle.Name </p>
+        }
+    }
+    else
+    {
+        <p>Not following any circles</p>
     }
 
 }

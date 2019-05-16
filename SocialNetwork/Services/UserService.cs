@@ -28,7 +28,7 @@ namespace SocialNetwork.Services
             _users = database.GetCollection<User>("Users");
             _walls = database.GetCollection<Wall>("Walls");
             _posts = database.GetCollection<Post>("Posts");
-            _circles = database.GetCollection<Circle>("Circles");
+            _circles = database.GetCollection<Circle>("circles");
         }
 
         public List<User> Get()
@@ -161,6 +161,8 @@ namespace SocialNetwork.Services
             vm.FeedPosts = GetFeedPosts(id);
             vm.Followable = GetFollowable(id);
             vm.Blacklisted = GetBlacklisted(id);
+            //vm.UserWall = _walls.Find(w => w.ID == vm.User.Wall).FirstOrDefault();
+            vm.Circles = GetCircles(id);
             //vm.UserPosts = GetUserPosts(id);
             vm.Users = Get();
 

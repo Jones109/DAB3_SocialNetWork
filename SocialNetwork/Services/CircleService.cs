@@ -31,13 +31,6 @@ namespace SocialNetwork.Services
             return _circles.Find(circle => true).ToList();
         }
 
-        public List<Circle> GetCirclesForUser(User user)
-        {
-            var circleIds = user.Circles;
-            
-            return null;
-        }
-
         public Circle Get(string id)
         {
             return _circles.Find<Circle>(circle => circle.Id == id).FirstOrDefault();

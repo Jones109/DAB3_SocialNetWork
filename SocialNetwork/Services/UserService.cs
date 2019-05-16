@@ -214,6 +214,13 @@ namespace SocialNetwork.Services
             return followers;
         }
 
+        public List<Circle> GetCircles(string id)
+        {
+
+
+            return new List<Circle>();
+        }
+
         public List<User> GetFollowable(string id)
         {
             var model = _users.Find<User>(user => user.Id == id).FirstOrDefault();

@@ -32,11 +32,11 @@ namespace SocialNetwork.Controllers
         public IActionResult Index(string id)
         {
             var user = _userService.Get(id);
-            var wallsForUser = _wallService.Get().Where(wall => wall.ID == user.Wall);
 
-            var result = _circleService.Get().Where(p => wallsForUser.Any(p2 => p2.ID == p.WallId));
+            var circles = _circleService.Get();
+            
 
-            return View(result);
+            return View(circles);
         }
 
         public IActionResult Create()
@@ -56,8 +56,8 @@ namespace SocialNetwork.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Circle circle)
         {
-
-            circle.OwnerId = _circleService.GetLoggedInUserId();
+            var loggedInUserId = _circleService.GetLoggedInUserId();
+            circle.OwnerId = loggedInUserId;
             var circleId = _circleService.Create(circle);
 
             
@@ -65,22 +65,27 @@ namespace SocialNetwork.Controllers
             var wall = new Wall()
             {
                 owner = circle.Name,
-                Followers = new List<follower>(),
+                Followers = new List<follower>()
+                {
+                    new follower()
+                    {
+                        followerID = loggedInUserId,
+                        followerName = _userService.Get(loggedInUserId).Name
+                    }
+                },
                 BlackList = new List<blacklistedUser>(),
                 ownerID = circleId,
                 type = "Circle",
                 postIDs = new List<string>(),
             };
 
-            Wall newWall = _wallService.Create(wall);
+            var newWall = _wallService.Create(wall);
 
             //add circle.wallId after creating wall
             circle.WallId = newWall.ID;
             circle.Id = circleId;
 
             _circleService.Update(circle.Id, circle);
-
-            // sæt returværdi på Create, så vi kan gå til den circle vi lige har created.
             
             return RedirectToAction("Index");
 

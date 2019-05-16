@@ -1,7 +1,10 @@
-﻿@model SocialNetwork.Models.Circle
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@model SocialNetwork.Models.Circle
 
 @{
     ViewData["Title"] = "Create";
+    var LoggedInAsId = HttpContextAccessor.HttpContext.Session.GetString("UserId");
 }
 
 <h1>Create</h1>
@@ -18,25 +21,25 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>@*
 
-            <div class="form-group">
-                <label asp-for="WallId" class="control-label"></label>
-                <input asp-for="WallId" class="form-control" />
-                <span asp-validation-for="WallId" class="text-danger"></span>
-            </div>*@
+                <div class="form-group">
+                    <label asp-for="WallId" class="control-label"></label>
+                    <input asp-for="WallId" class="form-control" />
+                    <span asp-validation-for="WallId" class="text-danger"></span>
+                </div>*@
             @*<div class="form-group">
-                <label asp-for="OwnerId" class="control-label"></label>
-                <input asp-for="OwnerId" class="form-control" />
-                <span asp-validation-for="OwnerId" class="text-danger"></span>
-            </div>*@
+                    <label asp-for="OwnerId" class="control-label"></label>
+                    <input asp-for="OwnerId" class="form-control" />
+                    <span asp-validation-for="OwnerId" class="text-danger"></span>
+                </div>*@
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary" @*asp-route-id="@LoggedInAsId"*@/>
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" asp-route-id="@LoggedInAsId">Back to List</a>
 </div>
 
 @section Scripts {

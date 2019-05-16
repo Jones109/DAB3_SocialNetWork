@@ -126,7 +126,7 @@ namespace SocialNetwork.Services
             vm.Following = GetFollowing(id);
             vm.FeedPosts = GetFeedPosts(id);
             vm.Followable = GetFollowable(id);
-            vm.UserPosts = GetUserPosts(id);
+            //vm.UserPosts = GetUserPosts(id);
             vm.Users = Get();
 
             return vm;

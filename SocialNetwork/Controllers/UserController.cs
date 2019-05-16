@@ -44,7 +44,8 @@ namespace SocialNetwork.Controllers
 
         public IActionResult Details(string id)
         {
-            return View(_userService.ConstructViewModel(id));
+            string current = HttpContext.Session.GetString("UserId");
+            return View(_userService.ConstructViewModel(current));
         }
         /*
         public IActionResult Follow(string id)

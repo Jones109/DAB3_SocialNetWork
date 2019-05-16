@@ -24,11 +24,18 @@
     var LoggedInAs = HttpContextAccessor.HttpContext.Session.GetString("UserId");
 
     var currentUser = _userService.Get(LoggedInAs);
-    }
+}
 @*<h1>
-    @controller  / @action  / @id ?type= @query
-</h1>*@
-
+        @controller  / @action  / @id ?type= @query
+    </h1>*@
+@if (Model.wall.type == "Circle")
+{
+    <a asp-action="Create" asp-controller="Post" asp-route-id="@Model.wall.ID">New circle post</a>
+}
+else
+{
+    <a asp-action="Create" asp-controller="Post" asp-route-id="@Model.wall.ID">New public post</a>
+}
 @foreach (var p in Model.posts)
 {
     <div class="container bg-light p-4 mt-4">
@@ -51,8 +58,8 @@
         <div class="h-100 clearfix">
 
         </div>
-        <div class="container m-0 mt-4 clearfix w-100" >
-            @if(!string.IsNullOrEmpty(p.ImgUri))
+        <div class="container m-0 mt-4 clearfix w-100">
+            @if (!string.IsNullOrEmpty(p.ImgUri))
             {
                 <img src="@p.ImgUri" />
             }
@@ -62,7 +69,7 @@
         </p>
         @if (p.Comments.Count > 0)
         {
-            
+
             <hr />
             <button class="nav-link btn btn-link commentToggle p-0" name="@p.Id">View Comments</button>
             <div id="@p.Id" class="comments">

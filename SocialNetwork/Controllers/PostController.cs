@@ -43,7 +43,7 @@ namespace SocialNetWork.Controllers
         }
 
         // GET: Post/Create
-        public ActionResult Create()
+        public ActionResult Create(string id)
         {
             return View();
         }
@@ -51,7 +51,7 @@ namespace SocialNetWork.Controllers
         // POST: Post/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(string text, IFormFile file)
+        public ActionResult Create(string id, string text, IFormFile file)
         {
             try
             {
@@ -62,7 +62,14 @@ namespace SocialNetWork.Controllers
 
                 post.OwnerId = currentUserId;
                 post.Text = text;
-                post.WallId = currentUser.Wall;
+                if (string.IsNullOrEmpty(id))
+                {
+                    post.WallId = currentUser.Wall;
+                }
+                else
+                {
+                    post.WallId = id;
+                }
                 post.Comments = new List<Comment>();
                 post.CreationTime= DateTime.Now;
                 post.OwnerName = currentUser.UserName;

@@ -20,7 +20,7 @@
             }
             if (!exist)
             {
-                <a class="btn-dark" asp-action="BlackList" asp-route-idToBlacklist="@follower.Id">Blacklist</a>
+                <a class="btn-dark btn ml-3" asp-action="BlackList" asp-route-idToBlacklist="@follower.Id">Blacklist</a>
             }
         }
     }
@@ -57,7 +57,7 @@
     {
         foreach (var circle in Model.Circles)
         {
-            <p>Circle: @circle.Name </p>
+            <a asp-action="GetWall" asp-controller="Wall" asp-route-type="Circle" asp-route-id="@circle.Id"> @circle.Name </a>
         }
     }
     else

@@ -75,27 +75,28 @@ namespace SocialNetwork.Services
         {
             List<Post> posts = new List<Post>();
             List<Wall> followingWall = new List<Wall>();
+            List<string> WallIds = new List<string>();
+            List<User> Following = GetFollowing(id);
 
-            var user = Get(id);
-
-            if (user.FollowingId != null && user.FollowingId.Count != 0)
+            if (Following != null)
             {
-                foreach (var wall in user.FollowingId)
+                foreach (var following in Following)
                 {
-                    followingWall.Add(_walls.Find<Wall>(w => w.ID == wall).FirstOrDefault());
+                    WallIds.Add(following.Wall);
+                }
+                foreach (var wallId in WallIds)
+                {
+                    followingWall.Add(_walls.Find(w => w.ID == wallId).FirstOrDefault());
+                }
+                foreach (var wall in followingWall)
+                {
+                    foreach (var post in wall.postIDs)
+                    {
+                        posts.Add(_posts.Find(p => p.Id == post).FirstOrDefault());
+                    }
                 }
             }
-            else return posts;
-
-            //foreach (var wall in followingWall)
-            //{
-            //    if (wall != null)
-            //        foreach (var post in wall.postIDs)
-            //        {
-            //            posts.Add(_posts.Find<Post>(p => p.Id == post).FirstOrDefault());
-            //        }
-            //}
-
+             
             return posts;
         }
 

@@ -72,3 +72,9 @@ body {
     height:0;
     opacity:0;
 }
+a {
+    color: rgb(222,82,72);
+}
+    a:hover {
+        color: rgb(182,32,22)
+    }

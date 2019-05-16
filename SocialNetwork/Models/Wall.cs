@@ -26,8 +26,10 @@ namespace SocialNetwork.Models
 
         public List<string> postIDs { get; set; }
 
+        
         [BsonElement("Followers")]
         public List<follower> Followers { get; set; } // User IDs
+        
 
         [BsonElement("owner")]
         public string owner { get; set; } // owner ID

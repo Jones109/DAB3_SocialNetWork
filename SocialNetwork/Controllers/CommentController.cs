@@ -50,6 +50,7 @@ namespace SocialNetwork.Controllers
             {
                 comment.LastEdited = DateTime.Now;
                 comment.Post = PostId;
+                comment.OwnerName = HttpContext.Session.GetString("Name");
   
 
                 Comment newComment = _commentService.Create(comment);

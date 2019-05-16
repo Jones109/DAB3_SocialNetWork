@@ -62,6 +62,10 @@ namespace SocialNetWork.Controllers
                 Post createdPost = _postService.Create(post);
 
                 Wall newWall = _wallService.GetByWallId(createdPost.WallId);
+                if (newWall.postIDs==null)
+                {
+                    newWall.postIDs = new List<string>();
+                }
                
 
                 newWall.postIDs.Add(new string(createdPost.Id));

@@ -137,7 +137,8 @@ namespace SocialNetwork.Services
             var model = _users.Find<User>(user => user.Id == id).FirstOrDefault();
 
             List<User> followers = new List<User>();
-
+            if (model == null)
+                return followers;
             if (model.FollowingId != null)
             {
                 foreach (var fo in model.FollowingId)

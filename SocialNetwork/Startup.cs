@@ -83,10 +83,12 @@ namespace SocialNetwork
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
             app.UseCookiePolicy();
             app.UseSession();
 
             app.UseAuthentication();
+            
 
             app.UseMvc(routes =>
             {

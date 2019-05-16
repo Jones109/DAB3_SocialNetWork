@@ -19,6 +19,7 @@
   <ItemGroup>
     <Folder Include="Pages\" />
     <Folder Include="Views\Comment\" />
+    <Folder Include="wwwroot\PostPictures\" />
   </ItemGroup>
 
 

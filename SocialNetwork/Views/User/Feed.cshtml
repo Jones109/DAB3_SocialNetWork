@@ -6,6 +6,7 @@
     Layout = "_Layout";
 }
 
+
 @if (Model != null)
 {
     <h2>@Model.Name feed</h2>
@@ -14,5 +15,11 @@
 else
 {
     <h2>Model not found</h2>
-} 
+}
 
+<p>
+    <a asp-action="Create" asp-controller="Post">Post Public</a>
+</p>
+<p>
+    <a asp-action="Create" asp-controller="Post">Post To Circle</a>
+</p>

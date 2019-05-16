@@ -30,6 +30,11 @@ namespace SocialNetwork.Services
             return _wall.Find(wall => wall.ownerID == ownerID).FirstOrDefault();
         }
 
+        public Wall GetByWallId(string wallID)
+        {
+            return _wall.Find(wall => wall.ID == wallID).FirstOrDefault();
+        }
+
         public Wall Create(Wall wall)
         {
             _wall.InsertOne(wall);

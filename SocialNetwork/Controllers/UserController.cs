@@ -36,9 +36,8 @@ namespace SocialNetwork.Controllers
         public IActionResult Feed(string id)
         {
             string current = HttpContext.Session.GetString("UserId");
-            var model = _userService.Get(current);
 
-            return View(model);
+            return View(_userService.ConstructViewModel(current));
         }
 
         public IActionResult Details(string id)

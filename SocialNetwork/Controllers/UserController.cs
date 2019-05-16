@@ -83,17 +83,7 @@ namespace SocialNetwork.Controllers
         [HttpPost]
         public ActionResult<User> Create(User user)
         {
-            Wall newWall = _wallService.Create(new Wall()
-            {
-                BlackList = new List<blacklistedUser>(),
-                Followers = new List<follower>(),
-                owner = user.Name,
-                ownerID = user.Id,
-                postIDs = new List<PostId>(),
-                type = "User"
-            });
-
-            user.Wall = newWall.ID;
+            
             _userService.Create(user);
 
             return CreatedAtRoute("GetUser", new { id = user.Id.ToString() }, user);
@@ -150,9 +140,23 @@ namespace SocialNetwork.Controllers
         {
             try
             {
-                _userService.Create(newUser);
+                newUser = _userService.Create(newUser);
 
-                return RedirectToAction("Index");
+                Wall newWall = _wallService.Create(new Wall()
+                {
+                    BlackList = new List<blacklistedUser>(),
+                    Followers = new List<follower>(),
+                    owner = newUser.Name,
+                    ownerID = newUser.Id,
+                    postIDs = new List<PostId>(),
+                    type = "User"
+                });
+
+                newUser.Wall = newWall.ID;
+
+                
+
+                return RedirectToAction("Login");
             }
             catch
             {

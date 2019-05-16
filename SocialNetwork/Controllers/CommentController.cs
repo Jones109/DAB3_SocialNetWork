@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -57,7 +58,7 @@ namespace SocialNetwork.Controllers
                 User currentUser = _userService.Get(currentUserId);
                 comment.OwnerName = currentUser.Name;
                 comment.OwnerId = currentUserId;
-  
+
 
                 Comment newComment = _commentService.Create(comment);
 
@@ -68,15 +69,37 @@ namespace SocialNetwork.Controllers
 
                 _postService.Update(comment.Post, newPost);
 
-                return RedirectToAction(nameof(Index));
+
+                var redirectAction = HttpContext.Session.GetString("action");
+                var redirectcontroller = HttpContext.Session.GetString("controller");
+                var redirectId = HttpContext.Session.GetString("id");
+
+
+                if (string.IsNullOrEmpty(redirectAction) || string.IsNullOrEmpty(redirectcontroller))
+                    return RedirectToAction("Index");
+
+                var query = HttpContext.Session.GetString("type");
+
+                var routeValues = new { id = redirectId };
+                var routeValuesWithType = new { id = redirectId, type = query };
+
+                if (string.IsNullOrEmpty(query))
+                {
+                    return RedirectToAction(redirectAction, redirectcontroller, routeValues, "comment" + newComment.Id);
+                }
+                else
+                {
+                    return RedirectToAction(redirectAction, redirectcontroller, routeValuesWithType, "comment" + newComment.Id);
+                }
+
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return View();
             }
         }
 
- 
+
 
         // GET: Comment/Edit/5
         public ActionResult Edit(string id)
@@ -101,7 +124,7 @@ namespace SocialNetwork.Controllers
                 comments.ElementAt(index).Text = comment.Text;
                 comments.ElementAt(index).IsEdited = true;
                 comments.ElementAt(index).LastEdited = DateTime.Now;
-                
+
                 _commentService.Update(id, comments.ElementAt(index));
 
                 post.Comments = comments;
@@ -109,7 +132,31 @@ namespace SocialNetwork.Controllers
                 _postService.Update(post.Id, post);
 
 
-                return RedirectToAction(nameof(Index));
+
+                var redirectAction = HttpContext.Session.GetString("action");
+                var redirectcontroller = HttpContext.Session.GetString("controller");
+                var redirectId = HttpContext.Session.GetString("id");
+
+
+                if (string.IsNullOrEmpty(redirectAction) || string.IsNullOrEmpty(redirectcontroller))
+                    return RedirectToAction("Index");
+
+                var query = HttpContext.Session.GetString("type");
+
+                var routeValues = new { id = redirectId };
+                var routeValuesWithType = new { id = redirectId, type = query };
+
+                if (string.IsNullOrEmpty(query))
+                {
+                    return RedirectToAction(redirectAction, redirectcontroller, routeValues, "comment" + id);
+                }
+                else
+                {
+                    return RedirectToAction(redirectAction, redirectcontroller, routeValuesWithType,"comment" + id);
+                }
+
+
+
             }
             catch
             {
@@ -132,7 +179,28 @@ namespace SocialNetwork.Controllers
             {
                 _commentService.Remove(id);
 
-                return RedirectToAction(nameof(Index));
+                var redirectAction = HttpContext.Session.GetString("action");
+                var redirectcontroller = HttpContext.Session.GetString("controller");
+                var redirectId = HttpContext.Session.GetString("id");
+
+
+                if (string.IsNullOrEmpty(redirectAction) || string.IsNullOrEmpty(redirectcontroller))
+                    return RedirectToAction("Index");
+
+                var query = HttpContext.Session.GetString("type");
+
+                var routeValues = new { id = redirectId };
+                var routeValuesWithType = new { id = redirectId, type = query };
+
+                if (string.IsNullOrEmpty(query))
+                {
+                    return RedirectToAction(redirectAction, redirectcontroller, routeValues, "comment" + id);
+                }
+                else
+                {
+                    return RedirectToAction(redirectAction, redirectcontroller, routeValuesWithType, "comment" + id);
+                }
+
             }
             catch
             {

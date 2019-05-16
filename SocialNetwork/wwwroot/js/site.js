@@ -20,6 +20,16 @@ $(document).ready(function () {
             $(this).html("Hide comments");
         }
     });
+
+    var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+    if (window.location.hash && isChrome) {
+        console.log("is chrome");
+        setTimeout(function () {
+            var hash = window.location.hash;
+            window.location.hash = "";
+            window.location.hash = hash;
+        }, 300);
+    }
 });
 
 function closePopUp()
@@ -27,3 +37,4 @@ function closePopUp()
     $("#popupWrapper").fadeOut();
     $("#popup").fadeOut();
 }
+

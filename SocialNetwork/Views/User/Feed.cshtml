@@ -1,25 +1,128 @@
-﻿@model SocialNetwork.ViewModels.UserViewModel
-
+﻿@using SocialNetwork.Models;
+@using SocialNetWork.Models;
+@using SocialNetwork.Services;
+@using SocialNetwork.ViewModels;
+@using Microsoft.AspNetCore.Http
+@using System.IO;
+@inject IHttpContextAccessor HttpContextAccessor
+@inject UserService _userService
+@model SocialNetwork.ViewModels.UserViewModel
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+    ViewData["Title"] = "Feed";
+
+    var url = Url.ActionContext.RouteData.Values;
+    string action = url["action"].ToString();
+    string controller = url["controller"].ToString();
+    string id = url["id"].ToString();
+    var query = HttpContextAccessor.HttpContext.Request.Query["type"];
+
+    HttpContextAccessor.HttpContext.Session.SetString("action", action);
+    HttpContextAccessor.HttpContext.Session.SetString("controller", controller);
+    HttpContextAccessor.HttpContext.Session.SetString("id", id);
+
+    var LoggedInAs = HttpContextAccessor.HttpContext.Session.GetString("UserId");
+
+    var currentUser = _userService.Get(LoggedInAs);
 }
 
+<p>
+    <a asp-action="Create" asp-controller="Post">Post Public</a>
+</p>
+<p>
+    <a asp-action="CreateForCircle" asp-controller="Post">Post To Circle</a>
+</p>
 
 @if (Model != null)
 {
     if (Model.FeedPosts != null && Model.FeedPosts.Count() != 0)
     {
-        <h3>@Model.User.Name feed</h3>
 
-        foreach (var post in Model.FeedPosts)
+        <h1>
+            @controller  / @action  / @id ?type= @query
+        </h1>
+
+        @foreach (var p in Model.FeedPosts)
         {
-            <h4> <b>@post.OwnerName Posted:</b> @post.Text </h4>
-            foreach (var comment in post.Comments)
-            {
-                <li><b>@comment.OwnerName : </b> @comment.Text </li>
-            }
+            <div class="container bg-light p-4 mt-4">
+                <a class="anchor" name="@p.Id">anchor</a>
+                <div class="float-left">
+                    <p class="name m-0">
+                        @p.OwnerName
+                    </p>
+                    <p class="m-0">
+                        @p.CreationTime.ToShortDateString()
+                    </p>
+                </div>
+                @if (p.OwnerId == LoggedInAs)
+                {
+                    <div class="float-right">
+                        <a href="/Post/Edit/@p.Id"><i class=" pr-3 fa fa-pen"></i></a>
+                        <a href="/Post/Delete/@p.Id"><i class="fa fa-trash"></i></a>
+                    </div>
+                }
+                <div class="h-100 clearfix">
+
+                </div>
+                <div class="container m-0 mt-4 clearfix w-100">
+                    @if (!string.IsNullOrEmpty(p.ImgUri))
+                    {
+                        <img src="@p.ImgUri" />
+                    }
+                </div>
+                <p class="m-0 mt-4 ">
+                    @p.Text
+                </p>
+                @if (p.Comments.Count > 0)
+                {
+
+                    <hr />
+                    <button class="nav-link btn btn-link commentToggle p-0" name="@p.Id">View Comments</button>
+                    <div id="@p.Id" class="comments">
+                        @foreach (var comment in p.Comments)
+                        {
+
+                            string commentId = "comment" + comment.Id;
+
+
+
+                            <a href="#" class="anchor" name='@commentId'>comment anchor</a>
+                            <div class="container comment p-3">
+                                @if (comment.OwnerId == LoggedInAs)
+                                {
+                                    <a class="float-right p-0 pr-2 m-0" href="/Comment/Edit/@comment.Id"><i class="fa fa-pen"></i></a>
+                                    <a class="float-right p-0 pr-3 m-0" href="/Comment/Delete/@comment.Id"><i class="fa fa-trash"></i></a>
+                                }
+                                <p class="float-left p-0 pr-2 m-0">
+                                    <b>  @comment.OwnerName: </b>
+                                </p>
+                                <p class="float-right pr-5">
+                                    @if (comment.IsEdited)
+                                    {
+                                        @:created: @comment.LastEdited
+                                    }
+                                    else
+                                    {
+                                        @:last edited @comment.LastEdited
+                                    }
+                                </p>
+                                <div class="clearfix mt-4">
+                                    <p>
+                                        @comment.Text
+                                    </p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+
+                <div class="container p-0">
+                    <a asp-action="Create" asp-controller="Comment" asp-route-PostId="@p.Id">add comment</a>
+                </div>
+
+            </div>
+
         }
+
     }
     else
     {
@@ -31,6 +134,8 @@ else
 {
     <h2>Model not found</h2>
 }
+
+
 
 <p>
     <a asp-action="Create" asp-controller="Post">Post Public</a>

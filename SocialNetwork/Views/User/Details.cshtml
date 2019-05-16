@@ -7,22 +7,27 @@
     <h3>Followers</h3>
     if (Model.Followers.Count != 0)
     {
-        foreach (var follower in Model.Followers)
-        {
-            <a asp-action="Details" asp-route-id="@follower.Id">@follower.Name</a>
-            bool exist = false;
-            foreach (var blacklist in Model.Blacklisted)
+        <ul class="list-group">
+            @foreach (var follower in Model.Followers)
             {
-                if (blacklist.Id == follower.Id)
-                {
+                <li class="list-group-item">
+                    <a asp-action="Details" asp-route-id="@follower.Id">@follower.Name</a>
+                    bool exist = false;
+                    @foreach (var blacklist in Model.Blacklisted)
+                    {
+                    if (blacklist.Id == follower.Id)
+                    {
                     exist = true;
-                }
+                    }
+                    }
+                    if (!exist)
+                    {
+                    <a class="btn-dark btn ml-3 pt-1 pb-1" asp-action="BlackList" asp-route-idToBlacklist="@follower.Id">Blacklist</a>
+                    }
+
+                </li>
             }
-            if (!exist)
-            {
-                <a class="btn-dark btn ml-3 pt-1 pb-1" asp-action="BlackList" asp-route-idToBlacklist="@follower.Id">Blacklist</a>
-            }
-        }
+        </ul>
     }
     else
     {
@@ -31,10 +36,15 @@
     <h3>Following</h3>
     if (Model.Following.Count != 0)
     {
-        foreach (var following in Model.Following)
-        {
-            <a asp-action="Details" asp-route-id="@following.Id">@following.Name</a>
-        }
+        <ul class="list-group w-25">
+            @foreach (var following in Model.Following)
+            {
+                <li class="list-group-item">
+                    <a asp-action="Details" asp-route-id="@following.Id">@following.Name</a>
+                    <a class="float-right" asp-action="GetWall" asp-controller="Wall" asp-route-id="@following.Id" asp-route-type="User">Wall</a>
+                </li>
+            }
+        </ul>
     }
     else
     {

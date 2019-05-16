@@ -56,7 +56,7 @@ body {
 }
 .comments {
     transform: scaleY(0);
-    height: 0;
+    height: 10px;
     overflow: hidden;
     transition: transform 0.1s ease-in-out, height 2s;
 }
@@ -68,26 +68,13 @@ body {
 {
     background-color:aliceblue;
 }
-#popup
-{
-    position:fixed;
-    left:50%;
-    top:50%;
-    transform:translate(-50%,-50%);
-    background-color:white;
-    width:100vw;
-    max-width:80vw;
-    height:100vh;
-    max-height:80vh;
-    z-index:101;
+.anchor{
+    height:0;
+    opacity:0;
 }
-#popupWrapper{
-    position:fixed;
-    width:100%;
-    top:0;
-    left:0;
-    height:100%;
-    z-index:100;
-    background-color:rgba(0,0,0,0.7);
-    cursor:pointer;
+a {
+    color: rgb(222,82,72);
 }
+    a:hover {
+        color: rgb(182,32,22)
+    }

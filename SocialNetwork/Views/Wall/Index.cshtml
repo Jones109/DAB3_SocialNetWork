@@ -6,9 +6,7 @@
 
 <h1>Wall</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
 <table class="table">
     <thead>
         <tr>
@@ -55,11 +53,7 @@ foreach (var item in Model) {
             <td>
                 @Html.DisplayFor(modelItem => item.type)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ownerID">Edit</a> |
-                <a asp-action="GetWall" asp-route-id="@item.ownerID" asp-route-type="@item.type"  >Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
+         
         </tr>
 }
         }

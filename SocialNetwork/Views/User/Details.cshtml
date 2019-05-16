@@ -1,6 +1,7 @@
 ﻿@using System.Security.Cryptography
+@using Microsoft.AspNetCore.Http
 @model SocialNetwork.ViewModels.UserViewModel
-
+@inject IHttpContextAccessor context
 
 @if (Model != null)
 {
@@ -8,10 +9,32 @@
     <h3>Followers</h3>
     if (Model.Followers.Count != 0)
     {
-        foreach (var follower in Model.Followers)
-        {
-            <a asp-action="Details" asp-route-id="@follower.Id">@follower.Name</a>
-        }
+        <ul class="list-group w-25">
+            @foreach (var follower in Model.Followers)
+            {
+                <li class="list-group-item">
+                    <a asp-action="Details" asp-route-id="@follower.Id">@follower.Name</a>
+                    <a class="float-right" asp-action="GetWall" asp-controller="Wall" asp-route-id="@follower.Id" asp-route-type="User">Wall</a>
+
+                    @if (Model.User.Id == context.HttpContext.Session.GetString("UserId"))
+                    {
+                        bool exist = false;
+                        foreach (var blacklist in Model.Blacklisted)
+                        {
+                            if (blacklist.Id == follower.Id)
+                            {
+                                exist = true;
+                            }
+                        }
+                        if (!exist)
+                        {
+                            <a class="btn-dark btn ml-3 pt-1 pb-1 float-right" asp-action="BlackList" asp-route-idToBlacklist="@follower.Id">Blacklist</a>
+                        }
+                    }
+                </li>
+
+            }
+        </ul>
     }
     else
     {
@@ -20,14 +43,50 @@
     <h3>Following</h3>
     if (Model.Following.Count != 0)
     {
-        foreach (var following in Model.Following)
-        {
-            <a asp-action="Details" asp-route-id="@following.Id">@following.Name</a>
-        }
+        <ul class="list-group w-25">
+            @foreach (var following in Model.Following)
+            {
+                <li class="list-group-item">
+                    <a asp-action="Details" asp-route-id="@following.Id">@following.Name</a>
+                    <a class="float-right" asp-action="GetWall" asp-controller="Wall" asp-route-id="@following.Id" asp-route-type="User">Wall</a>
+
+                </li>
+            }
+        </ul>
     }
     else
     {
         <p>Following none</p>
+    }
+    <h3>Blacklisted</h3>
+    if (Model.Blacklisted.Count != 0)
+    {
+    <ul class="list-group w-25">
+        @foreach (var blackList in Model.Blacklisted)
+        {
+        <li class="list-group-item">
+            <a asp-action="Details" asp-route-id="@blackList.Id">Blacklisted user: @blackList.Name</a>
+            <a class="float-right" asp-action="GetWall" asp-controller="Wall" asp-route-id="@blackList.Id" asp-route-type="User">Wall</a>
+
+        </li>
+        }
+    </ul>
+    }
+    else
+    {
+        <p>None blacklisted</p>
+    }
+    <h3>Circles</h3>
+    if (Model.Circles != null)
+    {
+        foreach (var circle in Model.Circles)
+        {
+            <a asp-action="GetWall" asp-controller="Wall" asp-route-type="Circle" asp-route-id="@circle.Id"> @circle.Name </a>
+        }
+    }
+    else
+    {
+        <p>Not following any circles</p>
     }
 
 }

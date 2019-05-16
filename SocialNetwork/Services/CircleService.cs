@@ -72,5 +72,8 @@ namespace SocialNetwork.Services
             _circles.DeleteOne(circle => circle.Id == id);
         }
 
+
+        
+
     }
 }

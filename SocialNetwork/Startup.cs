@@ -115,9 +115,9 @@ namespace SocialNetwork
 
             var userCollec = database.GetCollection<User>("Users");
             var wallCollec = database.GetCollection<Wall>("Walls");
-            var circleCollec = database.GetCollection<Circle>("Circles");
-            var postCollec = database.GetCollection<Post>("Post");
-            var commentCollec = database.GetCollection<Comment>("Comment");
+            var circleCollec = database.GetCollection<Circle>("circles");
+            var postCollec = database.GetCollection<Post>("Posts");
+            var commentCollec = database.GetCollection<Comment>("Comments");
 
             //adding users
             User u1 = new User(){Password = "1234", UserName = "u1", Name = "u1"};

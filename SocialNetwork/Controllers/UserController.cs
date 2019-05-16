@@ -208,5 +208,17 @@ namespace SocialNetwork.Controllers
                 return View();
             }
         }
+
+        public ActionResult LogOut()
+        {
+            var LoggedInAs = HttpContext.Session.GetString("UserId");
+
+            if(!string.IsNullOrEmpty(LoggedInAs))
+            {
+                HttpContext.Session.Remove("UserId");
+            }
+
+            return RedirectToAction("Index", "Home", "");
+        }
     }
 }

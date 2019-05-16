@@ -53,22 +53,30 @@ namespace SocialNetwork.Controllers
         {
 
             circle.OwnerId = _circleService.GetLoggedInUserId();
+            var circleId = _circleService.Create(circle);
+
+            
 
             var wall = new Wall()
             {
-                owner = _userService.Get(circle.OwnerId).Name,
+                owner = circle.Name,
                 Followers = new List<follower>(),
                 BlackList = new List<blacklistedUser>(),
-                ownerID = _circleService.GetLoggedInUserId()
+                ownerID = circleId,
+                type = "Circle",
+                postIDs = new List<string>(),
             };
 
-            _wallService.Create(wall);
+            Wall newWall = _wallService.Create(wall);
 
             //add circle.wallId after creating wall
-            circle.WallId = wall.ID;
+            circle.WallId = newWall.ID;
+            circle.Id = circleId;
+
+            _circleService.Update(circle.Id, circle);
 
             // sæt returværdi på Create, så vi kan gå til den circle vi lige har created.
-            var circleId = _circleService.Create(circle);
+            
             return RedirectToAction("Index");
 
         }

@@ -82,17 +82,7 @@ namespace SocialNetwork.Controllers
         [HttpPost]
         public ActionResult<User> Create(User user)
         {
-            Wall newWall = _wallService.Create(new Wall()
-            {
-                BlackList = new List<blacklistedUser>(),
-                Followers = new List<follower>(),
-                owner = user.Name,
-                ownerID = user.Id,
-                postIDs = new List<string>(),
-                type = "User"
-            });
-
-            user.Wall = newWall.ID;
+            
             _userService.Create(user);
 
             return CreatedAtRoute("GetUser", new { id = user.Id.ToString() }, user);
@@ -149,9 +139,25 @@ namespace SocialNetwork.Controllers
         {
             try
             {
-                _userService.Create(newUser);
+                string pass = newUser.Password;
+                newUser = _userService.Create(newUser);
+                
+                Wall newWall = _wallService.Create(new Wall()
+                {
+                    BlackList = new List<blacklistedUser>(),
+                    Followers = new List<follower>(),
+                    owner = newUser.Name,
+                    ownerID = newUser.Id,
+                    postIDs = new List<string>(),
+                    type = "User"
+                });
 
-                return RedirectToAction("Index");
+                newUser.Wall = newWall.ID;
+                newUser.Password = pass;
+
+                _userService.Update(newUser);
+
+                return RedirectToAction("Login");
             }
             catch
             {
@@ -206,6 +212,18 @@ namespace SocialNetwork.Controllers
                 Debug.WriteLine("failed");
                 return View();
             }
+        }
+
+        public ActionResult LogOut()
+        {
+            var LoggedInAs = HttpContext.Session.GetString("UserId");
+
+            if(!string.IsNullOrEmpty(LoggedInAs))
+            {
+                HttpContext.Session.Remove("UserId");
+            }
+
+            return RedirectToAction("Index", "Home", "");
         }
     }
 }

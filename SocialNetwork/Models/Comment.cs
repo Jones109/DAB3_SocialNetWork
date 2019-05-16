@@ -16,6 +16,8 @@ namespace SocialNetwork.Models
         [BsonElement("OwnerName")]
         public string OwnerName { get; set; }
 
+        [BsonElement("OwnerId")]
+        public string OwnerId { get; set; }
 
         [BsonElement("Post")]
         public string Post { get; set; }

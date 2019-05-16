@@ -19,8 +19,7 @@ namespace SocialNetwork.Models
         [BsonElement("OwnerId")]
         public string OwnerId { get; set; }
 
-        [BsonElement("Post")]
-        public string Post { get; set; }
+        
 
         [BsonElement("Text")]
         public string Text { get; set; }
@@ -30,6 +29,8 @@ namespace SocialNetwork.Models
 
         [BsonElement("IsEdited")]
         public bool IsEdited { get; set; }
+        [BsonElement("Post")]
+        public string Post { get; set; }
 
     }
 }

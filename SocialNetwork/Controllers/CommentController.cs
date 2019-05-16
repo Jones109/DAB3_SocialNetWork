@@ -91,14 +91,23 @@ namespace SocialNetwork.Controllers
         {
             try
             {
-                Comment newComment = _commentService.Get(id);
+                Comment editComment = _commentService.Get(comment.Id);
 
-                newComment.Text = comment.Text;
+                Post post = _postService.Get(editComment.Post);
+                var comments = post.Comments;
 
-                newComment.IsEdited = true;
-                newComment.LastEdited = DateTime.Now;
+                int index = comments.FindIndex(x => x.Id == editComment.Id);
 
-                _commentService.Update(id, newComment);
+                comments.ElementAt(index).Text = comment.Text;
+                comments.ElementAt(index).IsEdited = true;
+                comments.ElementAt(index).LastEdited = DateTime.Now;
+                
+                _commentService.Update(id, comments.ElementAt(index));
+
+                post.Comments = comments;
+
+                _postService.Update(post.Id, post);
+
 
                 return RedirectToAction(nameof(Index));
             }

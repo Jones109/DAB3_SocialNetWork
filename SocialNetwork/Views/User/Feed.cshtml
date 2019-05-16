@@ -5,6 +5,7 @@
     Layout = "_Layout";
 }
 
+
 @if (Model != null)
 {
     if (Model.FeedPosts != null && Model.FeedPosts.Count() != 0)
@@ -29,5 +30,11 @@
 else
 {
     <h2>Model not found</h2>
-} 
+}
 
+<p>
+    <a asp-action="Create" asp-controller="Post">Post Public</a>
+</p>
+<p>
+    <a asp-action="Create" asp-controller="Post">Post To Circle</a>
+</p>

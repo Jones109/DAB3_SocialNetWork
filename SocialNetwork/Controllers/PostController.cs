@@ -15,14 +15,16 @@ namespace SocialNetWork.Controllers
     public class PostController : Controller
     {
         private PostService _postService;
-        private LoginTestService _loginTestService;
+        private UserService _userService;
+        private WallService _wallService;
         
 
-        public PostController(PostService postService, LoginTestService loginTestService)
+        public PostController(PostService postService, UserService userService, WallService wallService)
         {
             _postService = postService;
-            _loginTestService = loginTestService; ;
-            
+            _userService = userService;
+            _wallService = wallService;
+
         }
 
         // GET: Post
@@ -50,16 +52,25 @@ namespace SocialNetWork.Controllers
         {
             try
             {
-                LoginTest currentUser = _loginTestService.Get(HttpContext.Session.GetString("UserId"));
+                User currentUser = _userService.Get(HttpContext.Session.GetString("UserId"));
 
+                post.WallId = currentUser.Wall;
                 post.Comments = new List<Comment>();
                 post.CreationTime= DateTime.Now;
-                post.OwnerName = currentUser.userName;
-                _postService.Create(post);
+                post.OwnerName = currentUser.UserName;
+
+                Post createdPost = _postService.Create(post);
+
+                Wall newWall = _wallService.GetByWallId(createdPost.WallId);
+               
+
+                newWall.postIDs.Add(new string(createdPost.Id));
+
+                _wallService.Update(newWall);
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception e)
             {
                 return View();
             }

@@ -60,6 +60,7 @@ namespace SocialNetwork
             services.AddScoped<CommentService>();
             services.AddScoped<PostService>();
             services.AddScoped<WallService>();
+            services.AddScoped<UserService>();
             services.AddScoped<LoginTestService>();
             services.AddScoped<CircleService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

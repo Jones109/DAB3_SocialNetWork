@@ -25,9 +25,14 @@ namespace SocialNetwork.Services
             return _wall.Find(wall => true).ToList();
         }
 
-        public Wall Get(string ownerID)
+        public Wall Get(string ownerID, string type)
         {
-            return _wall.Find(wall => wall.ownerID == ownerID).FirstOrDefault();
+            return _wall.Find(wall => wall.ownerID == ownerID ).FirstOrDefault();
+        }
+
+        public Wall GetByWallId(string wallID)
+        {
+            return _wall.Find(wall => wall.ID == wallID).FirstOrDefault();
         }
 
         public Wall Create(Wall wall)

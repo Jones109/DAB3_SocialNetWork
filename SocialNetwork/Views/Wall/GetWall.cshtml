@@ -1,48 +1,79 @@
 ﻿@using SocialNetwork.Models;
 @using SocialNetWork.Models;
+@using SocialNetwork.Services;
 @using SocialNetwork.ViewModels;
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@inject UserService _userService
 @model GetWallViewModel
 @{
     ViewData["Title"] = "GetWall";
+    var LoggedInAs = HttpContextAccessor.HttpContext.Session.GetString("UserId");
+
+    var currentUser = _userService.Get(LoggedInAs);
 }
 
 
 @foreach (var p in Model.posts)
 {
-    <div class="container bg-light">
-        <p class="name float-right">
-            @p.OwnerName
-        </p>
-        <p class="float-right">
-            @p.CreationTime
-        </p>
-        <p class="mt-3 clearfix">
-            @p.Text
-        </p>
-        <hr />
-
-        @foreach (var comment in p.Comments)
+    <div class="container bg-light p-4">
+        <div class="float-left">
+            <p class="name m-0">
+                @p.OwnerName
+            </p>
+            <p class="m-0">
+                @p.CreationTime.ToShortDateString()
+            </p>
+        </div>
+        @if (true)
         {
-            <div class="container comment">
-                <p class="float-right">
-                    @comment.OwnerName
-                </p>
-                <p class="float-right">
-                    @if(comment.IsEdited)
-                    {
-                        @:created: @comment.LastEdited
-                    }
-                    else
-                    {
-                        @:last edited @comment.LastEdited
-                    }
-                </p>
-                <p class="clearfix">
-                    @comment.Text
-                </p>
+            <div class="float-right">
+                <a href="/Post/Edit/@p.Id"><i class=" pr-3 fa fa-pen"></i></a>
+                <a href="/Post/Delete/@p.Id"><i class="fa fa-trash"></i></a>
             </div>
         }
+        <div class="h-100 clearfix">
+
+        </div>
+        <p class="m-0 mt-4 clearfix">
+            @p.Text
+        </p>
+        @if (p.Comments.Count > 0)
+        {
+            <hr />
+            <button class="nav-link btn btn-link commentToggle p-0" name="@p.Id">View Comments</button>
+            <div id="@p.Id" class="comments">
+                @foreach (var comment in p.Comments)
+                {
+                    <div class="container comment p-3">
+
+                        <p class="float-right">
+                            @comment.OwnerName
+                        </p>
+                        <p class="float-right">
+                            @if (comment.IsEdited)
+                            {
+                                @:created: @comment.LastEdited
+                            }
+                            else
+                            {
+                                @:last edited @comment.LastEdited
+                            }
+                        </p>
+                        <a href="/Comment/Edit/@comment.Id"><i class="fa fa-pen"></i></a>
+                        <p class="clearfix">
+                            @comment.Text
+                        </p>
+                    </div>
+                }
+            </div>
+        }
+
+        <div class="container p-0">
+            <a asp-action="Create" asp-controller="Comment" asp-route-PostId="@p.Id">add comment</a>
+        </div>
 
     </div>
 
 }
+

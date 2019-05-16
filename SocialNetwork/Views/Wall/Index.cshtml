@@ -19,9 +19,6 @@
                 @Html.DisplayNameFor(model => model.ownerID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.postIDs)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Followers)
             </th>
             <th>
@@ -47,9 +44,6 @@
                 @Html.DisplayFor(modelItem => item.ownerID)
             </td>
             <td>
-                <a href="#">see posts</a>
-            </td>
-            <td>
                 <a href="/Wall/Followers/@item.ID"></a>
             </td>
             <td>
@@ -63,7 +57,7 @@
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ownerID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                <a asp-action="GetWall" asp-route-id="@item.ownerID" asp-route-type="@item.type"  >Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
             </td>
         </tr>

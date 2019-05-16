@@ -78,7 +78,7 @@ namespace SocialNetwork.Controllers
         {
             var viewModel = new CircleViewModel {Circle = _circleService.Get(circleId)};
 
-            viewModel.Wall = _wallService.Get(viewModel.Circle.WallId);
+            viewModel.Wall = _wallService.Get(viewModel.Circle.WallId,"Circle");
 
             if(viewModel.Wall != null)
                 viewModel.Posts = _postService.GetPostForWall(viewModel.Wall.ID);

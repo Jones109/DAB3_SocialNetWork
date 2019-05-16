@@ -1,5 +1,4 @@
-﻿@using System.Security.Cryptography
-@model User
+﻿@model SocialNetwork.ViewModels.UserViewModel
 
 @{
     ViewBag.Title = "title";
@@ -9,7 +8,23 @@
 
 @if (Model != null)
 {
-    <h2>@Model.Name feed</h2>
+    if (Model.FeedPosts != null && Model.FeedPosts.Count() != 0)
+    {
+        <h3>@Model.User.Name feed</h3>
+
+        foreach (var post in Model.FeedPosts)
+        {
+            <h4> <b>@post.OwnerName Posted:</b> @post.Text </h4>
+            foreach (var comment in post.Comments)
+            {
+                <li><b>@comment.OwnerName : </b> @comment.Text </li>
+            }
+        }
+    }
+    else
+    {
+        <h3>No posts in feed</h3>
+    }
 
 }
 else

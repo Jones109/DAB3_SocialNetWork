@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using SocialNetwork.Data;
 using SocialNetwork.Models;
 using SocialNetwork.Services;
+using SocialNetwork.ViewModels;
+using SocialNetWork.Models;
 
 namespace SocialNetwork.Controllers
 {
@@ -16,10 +18,11 @@ namespace SocialNetwork.Controllers
     {
         
         private WallService _wallService;
-
-        public WallController(WallService service)
+        private PostService _postService;
+        public WallController(WallService service,PostService pservice)
         {
             _wallService = service;
+            _postService = pservice;
         }
 
         // GET: Wall
@@ -30,12 +33,7 @@ namespace SocialNetwork.Controllers
                 return View(_wallService.Get());
 
         }
-
-        // GET: Wall/Details/5
-        public ActionResult Details(string id)
-        {
-            return View(_wallService.Get(id));
-        }
+        
 
         // GET: Wall/Create
         public ActionResult Create()
@@ -50,7 +48,7 @@ namespace SocialNetwork.Controllers
         {
             try
             {
-                wall.postIDs= new List<PostId>();
+                wall.postIDs= new List<string>();
                 _wallService.Create(wall);
                 return RedirectToAction(nameof(Index));
             }
@@ -61,9 +59,9 @@ namespace SocialNetwork.Controllers
         }
 
         // GET: Wall/Edit/5
-        public ActionResult Edit(string id)
+        public ActionResult Edit(string id,string type)
         {
-            return View(_wallService.Get(id));
+            return View(_wallService.Get(id,type));
         }
 
         // POST: Wall/Edit/5
@@ -104,6 +102,17 @@ namespace SocialNetwork.Controllers
             {
                 return View();
             }
+        }
+        
+
+        public ActionResult GetWall(string id,string type)
+        {
+            var wall = _wallService.Get(id, type);
+            var Posts = _postService.GetPostForWall(wall.ID);
+            GetWallViewModel viewModel = new GetWallViewModel();
+            viewModel.wall = wall;
+            viewModel.posts = Posts;
+            return View(viewModel);
         }
     }
 }

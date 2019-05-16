@@ -72,47 +72,48 @@
                 <p class="m-0 mt-4 ">
                     @p.Text
                 </p>
-                @if (p.Comments.Count > 0)
+                @if (p.Comments != null)
                 {
+                    if (p.Comments.Count > 0)
+                    {
 
-                    <hr />
-                    <button class="nav-link btn btn-link commentToggle p-0" name="@p.Id">View Comments</button>
-                    <div id="@p.Id" class="comments">
-                        @foreach (var comment in p.Comments)
-                        {
+                        <hr />
+                        <button class="nav-link btn btn-link commentToggle p-0" name="@p.Id">View Comments</button>
+                        <div id="@p.Id" class="comments">
+                            @foreach (var comment in p.Comments)
+                            {
+                                string commentId = "comment" + comment.Id;
 
-                            string commentId = "comment" + comment.Id;
-
-
-
-                            <a href="#" class="anchor" name='@commentId'>comment anchor</a>
-                            <div class="container comment p-3">
-                                @if (comment.OwnerId == LoggedInAs)
-                                {
-                                    <a class="float-right p-0 pr-2 m-0" href="/Comment/Edit/@comment.Id"><i class="fa fa-pen"></i></a>
-                                    <a class="float-right p-0 pr-3 m-0" href="/Comment/Delete/@comment.Id"><i class="fa fa-trash"></i></a>
-                                }
-                                <p class="float-left p-0 pr-2 m-0">
-                                    <b>  @comment.OwnerName: </b>
-                                </p>
-                                <p class="float-right pr-5">
-                                    @if (comment.IsEdited)
+                                <a href="#" class="anchor" name='@commentId'>comment anchor</a>
+                                <div class="container comment p-3">
+                                    @if (comment.OwnerId == LoggedInAs)
                                     {
-                                        @:created: @comment.LastEdited
+                                        <a class="float-right p-0 pr-2 m-0" href="/Comment/Edit/@comment.Id"><i class="fa fa-pen"></i></a>
+                                        <a class="float-right p-0 pr-3 m-0" href="/Comment/Delete/@comment.Id"><i class="fa fa-trash"></i></a>
                                     }
-                                    else
-                                    {
-                                        @:last edited @comment.LastEdited
-                                    }
-                                </p>
-                                <div class="clearfix mt-4">
-                                    <p>
-                                        @comment.Text
+                                    <p class="float-left p-0 pr-2 m-0">
+                                        <b>  @comment.OwnerName: </b>
                                     </p>
+                                    <p class="float-right pr-5">
+                                        @if (comment.IsEdited)
+                                        {
+                                            @:created: @comment.LastEdited
+                                        }
+                                        else
+                                        {
+                                            @:last edited @comment.LastEdited
+                                        }
+                                    </p>
+                                    <div class="clearfix mt-4">
+                                        <p>
+                                            @comment.Text
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        }
-                    </div>
+                            }
+                        </div>
+                    }
+
                 }
 
                 <div class="container p-0">

@@ -13,7 +13,7 @@
     var url = Url.ActionContext.RouteData.Values;
     string action = url["action"].ToString();
     string controller = url["controller"].ToString();
-    string id = url["id"].ToString();
+    string id = Model.User.Id;
     var query = HttpContextAccessor.HttpContext.Request.Query["type"];
 
     HttpContextAccessor.HttpContext.Session.SetString("action", action);

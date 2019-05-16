@@ -23,6 +23,7 @@ namespace SocialNetwork.ViewModels
         public User User { get; set; }
         public List<User> Users { get; set; }
         public List<User> Followable { get; set; }
+        public List<User> Blacklisted { get; set; }
         public List<Post> UserPosts { get; set; }
     }
 }

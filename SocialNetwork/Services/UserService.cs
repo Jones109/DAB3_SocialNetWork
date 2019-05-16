@@ -8,6 +8,7 @@ using SocialNetwork.Models;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using SocialNetwork.ViewModels;
 
 namespace SocialNetwork.Services
@@ -103,7 +104,16 @@ namespace SocialNetwork.Services
                 }
                 foreach (var wallId in WallIds)
                 {
-                    followingWall.Add(_walls.Find(w => w.ID == wallId).FirstOrDefault());
+                    Wall temp = _walls.Find(w => w.ID == wallId).FirstOrDefault();
+                    bool IsBlacklisted = false;
+
+                    foreach (var blacklist in temp.BlackList)
+                    {
+                        if (blacklist.userID == id)
+                            IsBlacklisted = true;
+                    }
+                    if (!IsBlacklisted)
+                    followingWall.Add(temp);
                 }
                 foreach (var wall in followingWall)
                 {
@@ -117,6 +127,26 @@ namespace SocialNetwork.Services
             return posts;
         }
 
+        public bool Blacklist(string BlacklisterId, string idToBlacklist)
+        {
+            User u = Get(BlacklisterId);
+            User bUser = Get(idToBlacklist);
+            Wall userWall = _walls.Find(w => w.ID == u.Wall).FirstOrDefault();
+
+            if (userWall.BlackList == null)
+                userWall.BlackList = new List<blacklistedUser>();
+
+            blacklistedUser b = new blacklistedUser();
+            b.userID = idToBlacklist;
+            b.userName = bUser.Name;
+
+            userWall.BlackList.Add(b);
+
+            _walls.ReplaceOne(w => w.ID == u.Wall, userWall);
+
+            return true;
+        }
+
         public UserViewModel ConstructViewModel(string id)
         {
             UserViewModel vm = new UserViewModel();
@@ -126,6 +156,7 @@ namespace SocialNetwork.Services
             vm.Following = GetFollowing(id);
             vm.FeedPosts = GetFeedPosts(id);
             vm.Followable = GetFollowable(id);
+            vm.Blacklisted = GetBlacklisted(id);
             //vm.UserPosts = GetUserPosts(id);
             vm.Users = Get();
 
@@ -150,6 +181,21 @@ namespace SocialNetwork.Services
             return followers;
         }
 
+        public List<User> GetBlacklisted(string id)
+        {
+            var u = Get(id);
+            Wall w = _walls.Find(wa => wa.ID == u.Wall).FirstOrDefault();
+
+            List<User> blackListedUsers = new List<User>();
+
+            if (w.BlackList != null)
+                foreach (var b in w.BlackList)
+                {
+                    blackListedUsers.Add(_users.Find(ui => ui.Id == b.userID).FirstOrDefault());
+                }
+
+            return blackListedUsers;
+        }
 
         public List<User> GetFollowers(string id)
         {

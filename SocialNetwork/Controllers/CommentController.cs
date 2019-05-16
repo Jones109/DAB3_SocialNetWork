@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SocialNetwork.Models;
+using SocialNetwork.Services;
 using SocialNetWork.Models;
 
 namespace SocialNetwork.Controllers
@@ -13,9 +14,11 @@ namespace SocialNetwork.Controllers
     {
         private CommentService _commentService;
         private PostService _postService;
+        private UserService _userService;
 
-        public CommentController(CommentService commentService, PostService postService)
+        public CommentController(CommentService commentService, PostService postService, UserService userService)
         {
+            _userService = userService;
             _commentService = commentService;
             _postService = postService;
         }
@@ -50,7 +53,8 @@ namespace SocialNetwork.Controllers
             {
                 comment.LastEdited = DateTime.Now;
                 comment.Post = PostId;
-                comment.OwnerName = HttpContext.Session.GetString("Name");
+                User currentUser = _userService.Get(HttpContext.Session.GetString("UserId"));
+                comment.OwnerName = currentUser.Name;
   
 
                 Comment newComment = _commentService.Create(comment);

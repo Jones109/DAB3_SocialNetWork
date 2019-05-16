@@ -70,6 +70,23 @@ namespace SocialNetwork.Services
 
             return false;
         }
+
+        public List<Post> GetUserPosts(string id)
+        {
+            User u = Get(id);
+            Wall w = _walls.Find(wa => wa.ID == u.Wall).FirstOrDefault();
+            List<Post> posts = new List<Post>();
+
+            if (w.postIDs != null)
+            {
+                foreach (var post in w.postIDs)
+                {
+                    posts.Add(_posts.Find(p => p.Id == post).FirstOrDefault());
+                }
+            }
+
+            return posts;
+        }
         
         public List<Post> GetFeedPosts(string id)
         {
@@ -109,6 +126,7 @@ namespace SocialNetwork.Services
             vm.Following = GetFollowing(id);
             vm.FeedPosts = GetFeedPosts(id);
             vm.Followable = GetFollowable(id);
+            vm.UserPosts = GetUserPosts(id);
             vm.Users = Get();
 
             return vm;

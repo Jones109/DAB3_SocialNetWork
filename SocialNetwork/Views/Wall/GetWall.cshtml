@@ -28,14 +28,16 @@
 @*<h1>
         @controller  / @action  / @id ?type= @query
     </h1>*@
-@if (Model.wall.type == "Circle")
+
+@if (Model.wall.type == "Circle" &&  Model.wall.Followers.Where(f => f.followerID == LoggedInAs).Count() > 0)
 {
     <a asp-action="Create" asp-controller="Post" asp-route-id="@Model.wall.ID">New circle post</a>
 }
-else
+else if (Model.wall.ownerID == LoggedInAs)
 {
     <a asp-action="Create" asp-controller="Post" asp-route-id="@Model.wall.ID">New public post</a>
 }
+
 @foreach (var p in Model.posts)
 {
     <div class="container bg-light p-4 mt-4">

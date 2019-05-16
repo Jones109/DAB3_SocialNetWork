@@ -18,6 +18,7 @@ namespace SocialNetwork.Services
         private readonly IMongoCollection<User> _users;
         private readonly IMongoCollection<Post> _posts;
         private readonly IMongoCollection<Wall> _walls;
+        private readonly IMongoCollection<Circle> _circles;
         private MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
 
         public UserService(IConfiguration config)
@@ -27,6 +28,7 @@ namespace SocialNetwork.Services
             _users = database.GetCollection<User>("Users");
             _walls = database.GetCollection<Wall>("Walls");
             _posts = database.GetCollection<Post>("Posts");
+            _circles = database.GetCollection<Circle>("Circles");
         }
 
         public List<User> Get()
@@ -95,7 +97,7 @@ namespace SocialNetwork.Services
             List<Wall> followingWall = new List<Wall>();
             List<string> WallIds = new List<string>();
             List<User> Following = GetFollowing(id);
-
+            
             if (Following != null)
             {
                 foreach (var following in Following)
@@ -115,6 +117,7 @@ namespace SocialNetwork.Services
                     if (!IsBlacklisted)
                     followingWall.Add(temp);
                 }
+
                 foreach (var wall in followingWall)
                 {
                     foreach (var post in wall.postIDs)
@@ -123,7 +126,8 @@ namespace SocialNetwork.Services
                     }
                 }
             }
-             
+
+            posts.AddRange(GetCirclePosts(id));
             return posts;
         }
 
@@ -216,9 +220,41 @@ namespace SocialNetwork.Services
 
         public List<Circle> GetCircles(string id)
         {
+            var u = Get(id);
+            List<Circle> Circles = new List<Circle>();
+
+            if(u.Circles == null)
+                u.Circles = new List<string>();
+
+            foreach (var c in u.Circles)
+            {
+                Circles.Add(_circles.Find(ci => ci.Id == c).FirstOrDefault());
+            }
+
+            return Circles;
+        }
+
+        public List<Post> GetCirclePosts(string id)
+        {
+            var c = GetCircles(id);
+            List<Post> posts = new List<Post>();
+            List<Wall> walls = new List<Wall>();
+
+            foreach (var circle in c)
+            {
+                walls.Add(_walls.Find(wa => wa.ID == circle.WallId).FirstOrDefault());
+            }
+
+            foreach (var wall in walls)
+            {
+                foreach (var post in wall.postIDs)
+                {
+                    posts.Add(_posts.Find(p => p.Id == post).FirstOrDefault());
+                }
+            }
 
 
-            return new List<Circle>();
+            return posts;
         }
 
         public List<User> GetFollowable(string id)

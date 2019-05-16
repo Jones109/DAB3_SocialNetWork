@@ -21,8 +21,8 @@ namespace SocialNetwork.Models
         [BsonElement("ownerID")]
         public string ownerID { get; set; }
 
-        [BsonElement("postIDs")]
-        public List<PostId> postIDs { get; set; }
+        //[BsonElement("postIDs")]
+        //public List<string> postIDs { get; set; }
 
         [BsonElement("Followers")]
         public List<follower> Followers { get; set; } // User IDs
@@ -47,8 +47,8 @@ namespace SocialNetwork.Models
         public string userID { get; set; }
         public string userName { get; set; }
     }
-    public class PostId
-    {
-        public string id { get; set; }
-    }
+    //public class PostId
+    //{
+    //    public string id { get; set; }
+    //}
 }

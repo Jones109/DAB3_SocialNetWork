@@ -86,14 +86,14 @@ namespace SocialNetwork.Services
             }
             else return posts;
 
-            foreach (var wall in followingWall)
-            {
-                if (wall != null)
-                    foreach (var post in wall.postIDs)
-                    {
-                        posts.Add(_posts.Find<Post>(p => p.Id == post.id).FirstOrDefault());
-                    }
-            }
+            //foreach (var wall in followingWall)
+            //{
+            //    if (wall != null)
+            //        foreach (var post in wall.postIDs)
+            //        {
+            //            posts.Add(_posts.Find<Post>(p => p.Id == post).FirstOrDefault());
+            //        }
+            //}
 
             return posts;
         }

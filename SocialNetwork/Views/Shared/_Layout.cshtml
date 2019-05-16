@@ -55,7 +55,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Users</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Circle" asp-action="Index">Circles</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Circle" asp-action="Index" asp-route-id="@Context.Request.HttpContext.Session.GetString("UserId")">Circles</a>
                         </li>
                     </ul>
                 </div>

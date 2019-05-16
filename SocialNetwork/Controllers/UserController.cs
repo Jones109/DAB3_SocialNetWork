@@ -165,7 +165,8 @@ namespace SocialNetwork.Controllers
             }
         }
 
-        public ActionResult Login(string id)
+
+        public ActionResult Login()
         {
 
             return View();
@@ -174,7 +175,7 @@ namespace SocialNetwork.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(User userToLogin)
         {
-            string idUser;
+            string idUser = new string("");
             bool canLogIn = _userService.Login(userToLogin, out idUser);
             if (canLogIn)
             {
@@ -184,6 +185,7 @@ namespace SocialNetwork.Controllers
             }
             else
             {
+                ViewBag.Message = "Username and password did not match";
                 return View();
             }
         }

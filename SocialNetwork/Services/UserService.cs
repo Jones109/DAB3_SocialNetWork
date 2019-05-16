@@ -224,16 +224,30 @@ namespace SocialNetwork.Services
 
         public bool Login(User userToLogIn, out string id)
         {
-            var pass = HashPass(userToLogIn.Password);
-            id = _users.Find(u => u.UserName == userToLogIn.UserName && u.Password == pass).FirstOrDefault().Id;
-
-            if (string.IsNullOrEmpty(id))
+            if (userToLogIn != null && !string.IsNullOrEmpty(userToLogIn.Password) && !string.IsNullOrEmpty(userToLogIn.UserName))
             {
-                return false;
+                var pass = HashPass(userToLogIn.Password);
+                try { 
+                id = _users.Find(u => u.UserName == userToLogIn.UserName && u.Password == pass).FirstOrDefault().Id;
+                }
+                catch
+                {
+                    id = "";
+                    return false;
+                }
+                if (string.IsNullOrEmpty(id))
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
             }
             else
             {
-                return true;
+                id = "";
+                return false;
             }
         }
     }

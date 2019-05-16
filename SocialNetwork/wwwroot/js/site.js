@@ -21,3 +21,9 @@ $(document).ready(function () {
         }
     });
 });
+
+function closePopUp()
+{
+    $("#popupWrapper").fadeOut();
+    $("#popup").fadeOut();
+}

@@ -89,7 +89,7 @@ namespace SocialNetwork.Controllers
                 Followers = new List<follower>(),
                 owner = user.Name,
                 ownerID = user.Id,
-                postIDs = new List<PostId>(),
+                postIDs = new List<string>(),
                 type = "User"
             });
 

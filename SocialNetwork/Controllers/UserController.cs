@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -28,14 +29,14 @@ namespace SocialNetwork.Controllers
 
         public IActionResult Index(string id)
         {
-            var users = _userService.Get();
-
-            return View(users);
+            string current = HttpContext.Session.GetString("UserId");
+            return View(_userService.ConstructViewModel(current));
         }
 
         public IActionResult Feed(string id)
         {
-            var model = _userService.Get(id);
+            string current = HttpContext.Session.GetString("UserId");
+            var model = _userService.Get(current);
 
             return View(model);
         }
@@ -44,12 +45,13 @@ namespace SocialNetwork.Controllers
         {
             return View(_userService.ConstructViewModel(id));
         }
-
+        /*
         public IActionResult Follow(string id)
         {
-            return View(_userService.ConstructViewModel(id));
+            string current = HttpContext.Session.GetString("UserId");
+            return View(_userService.ConstructViewModel(current));
         }
-
+        */
         public IActionResult FollowPost(string id, string idToFollow)
         {
             if (_userService.Follow(idToFollow, id))
@@ -164,6 +166,32 @@ namespace SocialNetwork.Controllers
             }
             else
             {
+                return View();
+            }
+        }
+
+
+        // GET: LoginTest/Edit/5
+        public ActionResult Edit(string id)
+        {
+            return View(_userService.Get(id));
+        }
+
+        // POST: LoginTest/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(string id, User updatedUser)
+        {
+            try
+            {
+                updatedUser.Id = id;
+                _userService.Update(updatedUser);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                Debug.WriteLine("failed");
                 return View();
             }
         }

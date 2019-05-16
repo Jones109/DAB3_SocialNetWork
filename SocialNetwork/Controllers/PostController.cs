@@ -72,11 +72,52 @@ namespace SocialNetWork.Controllers
 
                 _wallService.Update(newWall);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Feed", "User");
             }
             catch(Exception e)
             {
                 return View();
+            }
+        }
+
+
+        public ActionResult CreateForCircle()
+        {
+            return View();
+        }
+
+        // POST: Post/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateForCircle(Post post)
+        {
+            try
+            {
+                User currentUser = _userService.Get(HttpContext.Session.GetString("UserId"));
+
+                
+                post.Comments = new List<Comment>();
+                post.CreationTime = DateTime.Now;
+                post.OwnerName = currentUser.UserName;
+
+                Post createdPost = _postService.Create(post);
+
+                Wall newWall = _wallService.GetByWallId(post.WallId);
+                if (newWall.postIDs == null)
+                {
+                    newWall.postIDs = new List<string>();
+                }
+
+
+                newWall.postIDs.Add(new string(createdPost.Id));
+
+                _wallService.Update(newWall);
+
+                return RedirectToAction("Feed", "User");
+            }
+            catch (Exception e)
+            {
+               return View();
             }
         }
 

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using SocialNetWork.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting.Internal;
+using Microsoft.IdentityModel.Tokens;
 using SocialNetwork.Models;
 using SocialNetwork.Services;
 
@@ -48,16 +51,26 @@ namespace SocialNetWork.Controllers
         // POST: Post/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Post post)
+        public ActionResult Create(string text, IFormFile file)
         {
             try
             {
                 User currentUser = _userService.Get(HttpContext.Session.GetString("UserId"));
 
+                Post post = new Post();
+
+                post.Text = text;
                 post.WallId = currentUser.Wall;
                 post.Comments = new List<Comment>();
                 post.CreationTime= DateTime.Now;
                 post.OwnerName = currentUser.UserName;
+
+                if (file != null)
+                {
+                    string path = null;
+                    if (UploadPicture(file, ref path))
+                        post.ImgUri = path;
+                }
 
                 Post createdPost = _postService.Create(post);
 
@@ -72,11 +85,52 @@ namespace SocialNetWork.Controllers
 
                 _wallService.Update(newWall);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Feed", "User");
             }
             catch(Exception e)
             {
                 return View();
+            }
+        }
+
+
+        public ActionResult CreateForCircle()
+        {
+            return View();
+        }
+
+        // POST: Post/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateForCircle(Post post)
+        {
+            try
+            {
+                User currentUser = _userService.Get(HttpContext.Session.GetString("UserId"));
+
+                
+                post.Comments = new List<Comment>();
+                post.CreationTime = DateTime.Now;
+                post.OwnerName = currentUser.UserName;
+
+                Post createdPost = _postService.Create(post);
+
+                Wall newWall = _wallService.GetByWallId(post.WallId);
+                if (newWall.postIDs == null)
+                {
+                    newWall.postIDs = new List<string>();
+                }
+
+
+                newWall.postIDs.Add(new string(createdPost.Id));
+
+                _wallService.Update(newWall);
+
+                return RedirectToAction("Feed", "User");
+            }
+            catch (Exception e)
+            {
+               return View();
             }
         }
 
@@ -136,6 +190,41 @@ namespace SocialNetWork.Controllers
             {
                 return View();
             }
+        }
+
+        private bool UploadPicture(IFormFile file, ref string path)
+        {
+            //Check if file is selected
+            if (file == null || file.Length == 0)
+                return false; //Content("File not selected");
+
+            //Check for correct filetype
+            string extension = Path.GetExtension(file.FileName);
+            if (extension != ".jpg" || extension == ".jpeg" || extension == ".png" || extension == ".gif")
+                return false; //Content("Incorrect filetype");
+
+            //Check for filesize > 4mb
+            if (file.Length > 400000)
+                return false; // Content("Too large file");
+
+            //Add timestamp to filename
+            var timeStamp = DateTime.Now.ToShortTimeString();
+            var fileName = timeStamp.Replace(':', '.') + file.FileName;
+
+            CurrentDirectoryHelpers.SetCurrentDirectory();
+            
+            //Combine filepath
+            var imgUrl = Path.Combine(
+                Directory.GetCurrentDirectory(), "wwwroot/PostPictures", fileName);
+
+            //Write code to file
+            using (var stream = new FileStream(imgUrl, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+            path = imgUrl;
+
+            return true;
         }
     }
 }

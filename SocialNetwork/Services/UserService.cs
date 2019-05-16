@@ -310,6 +310,12 @@ namespace SocialNetwork.Services
             _users.ReplaceOne(l => l.Id == LoginTestIn.Id, LoginTestIn);
         }
 
+        public void UpdateNotPassword(User LoginTestIn)
+        {
+           
+            _users.ReplaceOne(l => l.Id == LoginTestIn.Id, LoginTestIn);
+        }
+
         public void Remove(User LoginTestIn)
         {
             _users.DeleteOne(LoginTest => LoginTest.Id == LoginTestIn.Id);

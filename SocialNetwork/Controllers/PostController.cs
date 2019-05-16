@@ -87,9 +87,30 @@ namespace SocialNetWork.Controllers
 
                 _wallService.Update(newWall);
 
-                return RedirectToAction("Feed", "User");
+                var redirectAction = HttpContext.Session.GetString("action");
+                var redirectcontroller = HttpContext.Session.GetString("controller");
+                var redirectId = HttpContext.Session.GetString("id");
+
+
+                if (string.IsNullOrEmpty(redirectAction) || string.IsNullOrEmpty(redirectcontroller))
+                    return RedirectToAction("Index");
+
+                var query = HttpContext.Session.GetString("type");
+
+                var routeValues = new { id = redirectId };
+                var routeValuesWithType = new { id = redirectId, type = query };
+
+                if (string.IsNullOrEmpty(query))
+                {
+                    return RedirectToAction(redirectAction, redirectcontroller, routeValues, post.Id);
+                }
+                else
+                {
+                    return RedirectToAction(redirectAction, redirectcontroller, routeValuesWithType, post.Id);
+                }
+
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return View();
             }
@@ -139,7 +160,28 @@ namespace SocialNetWork.Controllers
 
                 _wallService.Update(newWall);
 
-                return RedirectToAction("Feed", "User");
+                var redirectAction = HttpContext.Session.GetString("action");
+                var redirectcontroller = HttpContext.Session.GetString("controller");
+                var redirectId = HttpContext.Session.GetString("id");
+
+
+                if (string.IsNullOrEmpty(redirectAction) || string.IsNullOrEmpty(redirectcontroller))
+                    return RedirectToAction("Index");
+
+                var query = HttpContext.Session.GetString("type");
+
+                var routeValues = new { id = redirectId };
+                var routeValuesWithType = new { id = redirectId, type = query };
+
+                if (string.IsNullOrEmpty(query))
+                {
+                    return RedirectToAction(redirectAction, redirectcontroller, routeValues, post.Id);
+                }
+                else
+                {
+                    return RedirectToAction(redirectAction, redirectcontroller, routeValuesWithType, post.Id);
+                }
+
             }
             catch (Exception e)
             {
@@ -160,7 +202,6 @@ namespace SocialNetWork.Controllers
         {
             try
             {
-
                 Post editedPost = _postService.Get(id);
                 if (post.ImgUri != null)
                 {
@@ -174,7 +215,28 @@ namespace SocialNetWork.Controllers
 
                 _postService.Update(id, editedPost);
 
-                return RedirectToAction(nameof(Index));
+                var redirectAction = HttpContext.Session.GetString("action");
+                var redirectcontroller = HttpContext.Session.GetString("controller");
+                var redirectId = HttpContext.Session.GetString("id");
+
+
+                if (string.IsNullOrEmpty(redirectAction) || string.IsNullOrEmpty(redirectcontroller))
+                    return RedirectToAction("Index");
+
+                var query = HttpContext.Session.GetString("type");
+
+                var routeValues = new { id = redirectId };
+                var routeValuesWithType = new { id = redirectId, type = query };
+
+                if (string.IsNullOrEmpty(query))
+                {
+                    return RedirectToAction(redirectAction, redirectcontroller, routeValues, post.Id);
+                }
+                else
+                {
+                    return RedirectToAction(redirectAction, redirectcontroller, routeValuesWithType, post.Id);
+                }
+
             }
             catch
             {
@@ -197,7 +259,28 @@ namespace SocialNetWork.Controllers
             {
                 _postService.Remove(post);
 
-                return RedirectToAction(nameof(Index));
+                var redirectAction = HttpContext.Session.GetString("action");
+                var redirectcontroller = HttpContext.Session.GetString("controller");
+                var redirectId = HttpContext.Session.GetString("id");
+
+
+                if (string.IsNullOrEmpty(redirectAction) || string.IsNullOrEmpty(redirectcontroller))
+                    return RedirectToAction("Index");
+
+                var query = HttpContext.Session.GetString("type");
+
+                var routeValues = new { id = redirectId };
+                var routeValuesWithType = new { id = redirectId, type = query };
+
+                if (string.IsNullOrEmpty(query))
+                {
+                    return RedirectToAction(redirectAction, redirectcontroller, routeValues, id);
+                }
+                else
+                {
+                    return RedirectToAction(redirectAction, redirectcontroller, routeValuesWithType, id);
+                }
+
             }
             catch
             {
@@ -213,8 +296,8 @@ namespace SocialNetWork.Controllers
 
             //Check for correct filetype
             string extension = Path.GetExtension(file.FileName);
-            if (extension != ".jpg" || extension == ".jpeg" || extension == ".png" || extension == ".gif")
-                return false; //Content("Incorrect filetype");
+            if (extension == ".jpg" || extension == ".jpeg" || extension == ".png" || extension == ".gif")
+            {
 
             //Check for filesize > 4mb
             if (file.Length > 400000)
@@ -235,9 +318,12 @@ namespace SocialNetWork.Controllers
             {
                 file.CopyTo(stream);
             }
-            path = imgUrl;
+            path = "/PostPictures/" + fileName;
 
             return true;
+
+            }
+                return false; //Content("Incorrect filetype");
         }
     }
 }

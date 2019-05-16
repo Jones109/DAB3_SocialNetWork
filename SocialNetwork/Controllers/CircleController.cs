@@ -91,7 +91,7 @@ namespace SocialNetwork.Controllers
 
         }
 
-        [Route("Circle/ShowCircle/{id}")]
+        [Route("Circle/ShowCircle/{circleId}")]
         public IActionResult ShowCircle(string circleId)
         {
             var viewModel = new CircleViewModel {Circle = _circleService.Get(circleId)};
@@ -106,9 +106,73 @@ namespace SocialNetwork.Controllers
 
         public IActionResult Delete(string id)
         {
+ 
             _circleService.Remove(id);
+
             return RedirectToAction("Index");
             
+        }
+
+
+        public IActionResult FollowCircle(string idToFollow)
+        {
+            try
+            {
+                var currentUserId = HttpContext.Session.GetString("UserId");
+                var circleToFollow = _circleService.Get(idToFollow);
+                var currentUser = _userService.Get(currentUserId);
+
+                var wallToFollow = _wallService.GetByWallId(circleToFollow.WallId);
+
+                if (currentUser.Circles == null)
+                {
+                    currentUser.Circles = new List<string>();
+                }
+
+                currentUser.Circles.Add(circleToFollow.Id);
+                _userService.UpdateNotPassword(currentUser);
+
+                if (wallToFollow.Followers==null)
+                {
+                    wallToFollow.Followers = new List<follower>();
+                }
+
+                wallToFollow.Followers.Add(new follower()
+                    {followerID = currentUserId, followerName = currentUser.Name});
+                _wallService.Update(wallToFollow);
+
+                return Redirect($"/Circle/ShowCircle/{circleToFollow.Id}");
+
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("Index");
+            }
+        }
+
+        public IActionResult UnFollowCircle(string idToUnFollow)
+        {
+            try
+            {
+                var currentUserId = HttpContext.Session.GetString("UserId");
+                var circleToUnFollow = _circleService.Get(idToUnFollow);
+                var currentUser = _userService.Get(currentUserId);
+                var wallToUnFollow = _wallService.GetByWallId(circleToUnFollow.WallId);
+
+                currentUser.Circles.Remove(circleToUnFollow.Id);
+                _userService.UpdateNotPassword(currentUser);
+
+                int index = wallToUnFollow.Followers.FindIndex(f=>f.followerID==currentUserId);
+                wallToUnFollow.Followers.RemoveAt(index);
+                _wallService.Update(wallToUnFollow);
+
+                return RedirectToAction("Index");
+
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("Index");
+            }
         }
 
     }

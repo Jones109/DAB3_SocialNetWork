@@ -31,7 +31,12 @@ namespace SocialNetwork.Controllers
 
         public IActionResult Index(string id)
         {
-            return View(_circleService.Get());
+            var user = _userService.Get(id);
+            var wallsForUser = _wallService.Get().Where(wall => wall.ID == user.Wall);
+
+            var result = _circleService.Get().Where(p => wallsForUser.Any(p2 => p2.ID == p.WallId));
+
+            return View(result);
         }
 
         public IActionResult Create()
@@ -89,7 +94,7 @@ namespace SocialNetwork.Controllers
             viewModel.Wall = _wallService.Get(viewModel.Circle.WallId,"Circle");
 
             if(viewModel.Wall != null)
-                viewModel.Posts = _postService.GetPostForWall(viewModel.Wall.ID);
+                viewModel.Posts = _postService.Get().Where(p => p.WallId == viewModel.Wall.ID).ToList();
 
             return View(viewModel);
         }

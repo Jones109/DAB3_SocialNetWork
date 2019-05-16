@@ -17,6 +17,7 @@ namespace SocialNetwork.Models
         public string WallId { get; set; }
 
         [BsonElement("Name")]
+        [BsonRequired]
         public string Name { get; set; }
 
         [BsonElement("OwnerId")]

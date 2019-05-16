@@ -16,6 +16,7 @@ namespace SocialNetwork.ViewModels
             Following = new List<User>();
             FeedPosts = new List<Post>();
             Followable = new List<User>();
+
         }
         public List<User> Followers { get; set; }
         public List<User> Following { get; set; }
@@ -23,6 +24,8 @@ namespace SocialNetwork.ViewModels
         public User User { get; set; }
         public List<User> Users { get; set; }
         public List<User> Followable { get; set; }
+        public List<User> Blacklisted { get; set; }
         public List<Post> UserPosts { get; set; }
+
     }
 }

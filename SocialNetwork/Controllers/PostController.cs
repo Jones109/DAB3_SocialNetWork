@@ -202,7 +202,6 @@ namespace SocialNetWork.Controllers
         {
             try
             {
-
                 Post editedPost = _postService.Get(id);
                 if (post.ImgUri != null)
                 {

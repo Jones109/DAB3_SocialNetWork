@@ -2,6 +2,8 @@
 @model SocialNetwork.ViewModels.UserViewModel
 
 
+
+
 @if (Model != null)
 {
     <h2>@Model.User.Name Profile</h2>
@@ -11,6 +13,18 @@
         foreach (var follower in Model.Followers)
         {
             <a asp-action="Details" asp-route-id="@follower.Id">@follower.Name</a>
+            bool exist = false;
+            foreach (var blacklist in Model.Blacklisted)
+            {
+                if (blacklist.Id == follower.Id)
+                {
+                    exist = true;
+                }
+            }
+            if (!exist)
+            {
+                <a class="btn-dark" asp-action="BlackList" asp-route-idToBlacklist="@follower.Id">Blacklist</a>
+            }
         }
     }
     else
@@ -28,6 +42,18 @@
     else
     {
         <p>Following none</p>
+    }
+    <h3>Blacklisted</h3>
+    if (Model.Blacklisted.Count != 0)
+    {
+        foreach (var blackList in Model.Blacklisted)
+        {
+            <p>Blacklisted user: @blackList.Name</p>
+        }
+    }
+    else
+    {
+        <p>None blacklisted</p>
     }
 
 }

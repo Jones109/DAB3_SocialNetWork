@@ -50,13 +50,15 @@ namespace SocialNetwork.Controllers
             string current = HttpContext.Session.GetString("UserId");
             return View(_userService.ConstructViewModel(current));
         }
-        /*
-        public IActionResult Follow(string id)
+
+        public IActionResult BlackList(string idToBlacklist)
         {
-            string current = HttpContext.Session.GetString("UserId");
-            return View(_userService.ConstructViewModel(current));
+            string id = HttpContext.Session.GetString("UserId");
+            _userService.Blacklist(id, idToBlacklist);
+
+            return RedirectToAction("Details");
         }
-        */
+
         public IActionResult FollowPost(string id, string idToFollow)
         {
             if (_userService.Follow(idToFollow, id))

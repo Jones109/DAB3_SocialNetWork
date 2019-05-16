@@ -147,7 +147,7 @@ namespace SocialNetwork.Controllers
                     Followers = new List<follower>(),
                     owner = newUser.Name,
                     ownerID = newUser.Id,
-                    postIDs = new List<PostId>(),
+                    postIDs = new List<string>(),
                     type = "User"
                 });
 

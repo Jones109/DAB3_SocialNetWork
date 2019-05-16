@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>My Circle</h1>
+<h1>Circles</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -47,10 +47,10 @@
                 @Html.ActionLink("Delete", "Delete", new { id = item.Id })
             </td> @**@
             <td>
-                <a class="btn-dark" asp-action="FollowCircle" asp-route-idToFollow="@item.Id">Follow</a>
+                <a class="btn-dark btn pt-1 pb-1" asp-action="FollowCircle" asp-route-idToFollow="@item.Id">Follow</a>
             </td>@**@
             <td>
-                <a class="btn-dark" asp-action="UnFollowCircle" asp-route-idToUnFollow="@item.Id">Unfollow</a>
+                <a class="btn-dark btn pt-1 pb-1"  asp-action="UnFollowCircle" asp-route-idToUnFollow="@item.Id">Unfollow</a>
             </td>@**@
             @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
         @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |

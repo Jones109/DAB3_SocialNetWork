@@ -1,9 +1,6 @@
 ﻿@using System.Security.Cryptography
 @model SocialNetwork.ViewModels.UserViewModel
 
-
-
-
 @if (Model != null)
 {
     <h2>@Model.User.Name Profile</h2>
@@ -23,7 +20,7 @@
             }
             if (!exist)
             {
-                <a class="btn-dark" asp-action="BlackList" asp-route-idToBlacklist="@follower.Id">Blacklist</a>
+                <a class="btn-dark btn ml-3 pt-1 pb-1" asp-action="BlackList" asp-route-idToBlacklist="@follower.Id">Blacklist</a>
             }
         }
     }
@@ -54,6 +51,18 @@
     else
     {
         <p>None blacklisted</p>
+    }
+    <h3>Circles</h3>
+    if (Model.Circles != null)
+    {
+        foreach (var circle in Model.Circles)
+        {
+            <a asp-action="GetWall" asp-controller="Wall" asp-route-type="Circle" asp-route-id="@circle.Id"> @circle.Name </a>
+        }
+    }
+    else
+    {
+        <p>Not following any circles</p>
     }
 
 }

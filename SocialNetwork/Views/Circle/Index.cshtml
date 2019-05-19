@@ -42,23 +42,11 @@
 
                 <td>
                     @*@Html.ActionLink(item.Name, "ShowCircle", "Circle",item.Id)*@
-                    <a asp-action="ShowCircle" asp-route-id="@item.Id" asp-route-circleId="@item.Id">@item.Name</a>
+                    <a asp-action="ShowCircle" asp-route-circleId="@item.Id">@item.Name</a>
                 </td>
 
                 @Html.HiddenFor(modelItem => item.OwnerId)
 
-                <td>
-                    @if (LoggedInAsId == item.OwnerId)
-                    {
-                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                    }
-                    else
-                    {
-                        @*@Html.ActionLink("")*@
-                        <a href="">Join</a>
-                    }
-
-                </td>
 
 
                 @**@
@@ -66,7 +54,11 @@
                     @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
                 *@
             <td>
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                @if (LoggedInAsId == item.OwnerId)
+                {
+                        
+                }
+                
             </td> @**@
             <td>
                 <a class="btn-dark btn pt-1 pb-1" asp-action="FollowCircle" asp-route-idToFollow="@item.Id">Follow</a>

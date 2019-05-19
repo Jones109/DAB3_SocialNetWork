@@ -44,28 +44,30 @@ namespace SocialNetwork.Controllers
 
             Debug.WriteLine(user.Id);
 
-            var wallsWhereUserIsFollower = _wallService.Get()
-                .Where(wall => wall.Followers.Any(follower => follower.followerID == id)).ToList();
+            var test = _wallService.Get();
 
-            foreach (var wall in _wallService.Get())
+            var wallsWhereUserIsFollower = new List<Wall>();
+            var test2 = test.FindAll(wall => wall.Followers != null);
+
+            foreach (var wall in test2)
             {
-                foreach (var wallFollower in wall.Followers)
+                if (wall.Followers.Any(follower => follower.followerID == id))
                 {
-                    Debug.WriteLine(wallFollower.followerID);
+                    wallsWhereUserIsFollower.Add(wall);
                 }
             }
 
-            foreach (var wall in wallsWhereUserIsFollower)
+            /*foreach (var wall in wallsWhereUserIsFollower)
             {
                 Debug.WriteLine(wall.ID);
-            }
+            }*/
 
             var circles = _circleService.Get();
 
-            foreach (var circle in circles)
+            /*foreach (var circle in circles)
             {
                 Debug.WriteLine(circle.Id);
-            }
+            }*/
 
             var circlesResult = new List<Circle>();
 
@@ -141,9 +143,11 @@ namespace SocialNetwork.Controllers
         {
             var viewModel = new CircleViewModel {Circle = _circleService.Get(circleId)};
 
-            viewModel.Wall = _wallService.Get(viewModel.Circle.WallId,"Circle");
+            var walls = _wallService.Get() ?? throw new ArgumentNullException("_wallService.Get()");
 
-            if(viewModel.Wall != null)
+            viewModel.Wall = walls.Find(wall => wall.ownerID == circleId);
+
+            if (viewModel.Wall != null)
                 viewModel.Posts = _postService.Get().Where(p => p.WallId == viewModel.Wall.ID).ToList();
 
             return View(viewModel);

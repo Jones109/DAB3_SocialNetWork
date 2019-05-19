@@ -1,9 +1,14 @@
-﻿@model SocialNetwork.ViewModels.CircleViewModel
+﻿@using Microsoft.AspNetCore.Http
+@model SocialNetwork.ViewModels.CircleViewModel
+@inject IHttpContextAccessor HttpContextAccessor
 
 @{
     ViewData["Title"] = "Circle";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var LoggedInAs = HttpContextAccessor.HttpContext.Session.GetString("UserId");
 }
+
+
 
 
 @if (!Model.Circle.Name.Contains("Circle") || !Model.Circle.Name.Contains("circle"))
@@ -13,7 +18,7 @@
 }
 else
 {
-    <h1>@Model.Circle.Name</h1>
+    <h1 style="border-bottom: 3px solid red; display: inline;">@Model.Circle.Name</h1>
 }
 
 @{
@@ -21,33 +26,116 @@ else
 }
 <table id="@circleTableId">
     <thead>
-    <tr>
-        <th>@Html.DisplayFor(circle => circle.Wall.type)</th>
-    </tr>
+        @*<tr>
+                <th>@Html.DisplayFor(circle => circle.Wall.type)</th>
+            </tr>*@
     </thead>
     <tbody>
-    
-    @if (Model.Wall != null)
-    {
-        if (Model.Wall.Followers != null)
+
+        @if (Model.Wall != null)
         {
-            foreach (var item in Model.Wall.Followers)
+            if (Model.Wall.Followers != null)
             {
-                <h1>@item.followerName</h1>
+                <h1>Users:</h1>
+                foreach (var item in Model.Wall.Followers)
+                {
+                    <h2>User: @item.followerName</h2>
+                }
+                foreach (var p in Model.Posts)
+                {
+                    <div class="container bg-light p-4 mt-4">
+                        <a class="anchor" name="@p.Id">anchor</a>
+                        <div class="float-left">
+                            <p class="name m-0">
+                                @p.OwnerName
+                            </p>
+                            <p class="m-0">
+                                @p.CreationTime.ToShortDateString()
+                            </p>
+                        </div>
+                        @if (p.OwnerId == LoggedInAs)
+                        {
+                            <div class="float-right">
+                                <a href="/Post/Edit/@p.Id"><i class=" pr-3 fa fa-pen"></i></a>
+                                <a href="/Post/Delete/@p.Id"><i class="fa fa-trash"></i></a>
+                            </div>
+                        }
+                        <div class="h-100 clearfix">
+
+                        </div>
+                        <div class="container m-0 mt-4 clearfix w-100">
+                            @if (!string.IsNullOrEmpty(p.ImgUri))
+                            {
+                                <img src="@p.ImgUri" />
+                            }
+                        </div>
+                        <p class="m-0 mt-4 ">
+                            @p.Text
+                        </p>
+                        @*@if (p.Comments.Count > 0)
+                        {
+
+                            <hr />
+                            <button class="nav-link btn btn-link commentToggle p-0" name="@p.Id">View Comments</button>
+                            <div id="@p.Id" class="comments">
+                                @foreach (var comment in p.Comments)
+                                {
+
+                                    string commentId = "comment" + comment.Id;
+
+
+
+                                    <a href="#" class="anchor" name='@commentId'>comment anchor</a>
+                                    <div class="container comment p-3">
+                                        @if (comment.OwnerId == LoggedInAs)
+                                        {
+                                            <a class="float-right p-0 pr-2 m-0" href="/Comment/Edit/@comment.Id"><i class="fa fa-pen"></i></a>
+                                            <a class="float-right p-0 pr-3 m-0" href="/Comment/Delete/@comment.Id"><i class="fa fa-trash"></i></a>
+                                        }
+                                        <p class="float-left p-0 pr-2 m-0">
+                                            <b>  @comment.OwnerName: </b>
+                                        </p>
+                                        <p class="float-right pr-5">
+                                            @if (comment.IsEdited)
+                                            {
+                                                @:created: @comment.LastEdited
+                                            }
+                                            else
+                                            {
+                                                @:last edited @comment.LastEdited
+                                            }
+                                        </p>
+                                        <div class="clearfix mt-4">
+                                            <p>
+                                                @comment.Text
+                                            </p>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }*@
+
+                        <div class="container p-0">
+                            <a asp-action="Create" asp-controller="Comment" asp-route-PostId="@p.Id">add comment</a>
+                        </div>
+
+                    </div>
+                }
             }
+            else
+            {
+                <h1>There is a wall, but no followers...</h1>
+            }
+
         }
         else
         {
-                <h1>There is a wall, but no followers...</h1>
+            <h1>No wall yet</h1>
+            <p>
+                <a asp-action="Create" asp-controller="Wall">Create a Wall</a>
+            </p>
         }
-            
-    }
-    else
-    {
-        <h1>No wall yet</h1>
-        
-    }
-    
+
     </tbody>
 </table>
 
@@ -55,4 +143,4 @@ else
 
 
 
-@Html.ActionLink("Delete", "Delete"/*, new {  id=item.Id }*/)
+@Html.ActionLink("Delete this circle", "Delete", new { id = Model.Circle.Id })

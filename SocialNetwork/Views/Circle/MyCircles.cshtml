@@ -3,17 +3,29 @@
 @model IEnumerable<SocialNetwork.Models.Circle>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Create";
     var LoggedInAsId = HttpContextAccessor.HttpContext.Session.GetString("UserId");
 }
 
-<h1>Circles</h1>
+<h1>My Circles</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
+<div>
+    <a asp-action="Create">Create Circle</a>
+</div>
+<span style="display: table; padding-top: 20px; padding-bottom: 20px; margin: 0 auto;">
+    Look for circles to join in the Circles page
+</span>
+
+@if (Model == null)
+{
+    <div>
+        Model is null
+    </div>
+}
+else
+{
+    <table class="table">
+        <thead>
         <tr>
             @*<th>
                     @Html.DisplayNameFor(model => model.Id)
@@ -29,8 +41,8 @@
                 </th>*@
             @*<th></th>*@
         </tr>
-    </thead>
-    <tbody>
+        </thead>
+        <tbody>
         @foreach (var item in Model)
         {
             <tr>
@@ -65,20 +77,9 @@
                 @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
                     @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
                 *@
-            <td>
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td> @**@
-            <td>
-                <a class="btn-dark btn pt-1 pb-1" asp-action="FollowCircle" asp-route-idToFollow="@item.Id">Follow</a>
-            </td>@**@
-            <td>
-                <a class="btn-dark btn pt-1 pb-1"  asp-action="UnFollowCircle" asp-route-idToUnFollow="@item.Id">Unfollow</a>
-            </td>@**@
-            @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            *@
 
             </tr>
         }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+}
